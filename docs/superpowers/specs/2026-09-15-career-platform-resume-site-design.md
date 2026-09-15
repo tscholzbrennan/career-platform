@@ -40,6 +40,8 @@ The first version prioritizes a polished personal brand, clear project storytell
 6. Contact page with direct email, social links, and optional inquiry form.
 7. Structured content model that keeps site content maintainable.
 8. Responsive UX for desktop and mobile browsers.
+9. If the database is unavailable, the site must continue serving a readable public profile using a cached or static fallback snapshot so the person remains visible to recruiters.
+10. The fallback profile must include the core identity, summary, featured projects, and contact links without requiring database connectivity.
 
 ### Content requirements
 
@@ -54,6 +56,8 @@ Each experience entry should communicate:
 - time period
 - responsibilities
 - tangible business or technical outcomes
+
+The public profile must remain readable when the database is unavailable. Core profile content should be retained in a static or cached fallback representation that can be served immediately, even if the database is unreachable or returning errors.
 
 ## Proposed site structure
 
@@ -94,8 +98,9 @@ Use a hybrid model:
 - structured database for core content
 - reusable templates for public pages
 - lightweight admin or editor flow for update operations
+- static or cached fallback snapshot for core public profile data
 
-This balances maintainability with small-team simplicity.
+This balances maintainability with small-team simplicity while preserving recruiter visibility during outages.
 
 ## Data model
 
@@ -168,6 +173,19 @@ Fields:
 - description
 - associated project or profile
 
+### Fallback profile snapshot
+
+Fields:
+- profile summary
+- headline
+- contact links
+- featured projects
+- resume URL
+- last successful sync timestamp
+- source of truth status (database or fallback)
+
+This snapshot should be updated whenever the database is successfully refreshed, and used automatically when the database is unavailable.
+
 ## UX and design goals
 
 - Clear, recruiter-friendly hierarchy
@@ -210,6 +228,8 @@ Include direct and reliable contact paths: email, LinkedIn, GitHub, and an inqui
 - Avoid overengineering platform features before demand exists.
 - Separate content from presentation to keep the site easy to evolve.
 - Ensure all public pages remain accessible and indexable.
+- Keep the primary profile visible even when the database is unavailable by serving a static or cached fallback snapshot and surfacing a graceful degraded-state message when appropriate.
+- Treat data outages as a first-class resilience scenario, not an edge case.
 
 ## Future growth path
 
@@ -259,4 +279,4 @@ Cons:
 
 ## Recommendation
 
-Build the first version as a hybrid, database-backed personal career site with a recruiter-first presentation and structured content models. This gives the best balance of polish, maintainability, and future growth while staying focused on v1 goals.
+Build the first version as a hybrid, database-backed personal career site with a recruiter-first presentation and structured content models, and include a resilient fallback profile path. The site should keep the core public profile visible even when the database is unavailable by using a cached or static fallback snapshot. This gives the best balance of polish, maintainability, and future growth while preserving recruiter visibility during outages and staying focused on v1 goals.
