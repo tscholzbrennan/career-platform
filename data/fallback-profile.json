@@ -1,0 +1,19 @@
+{
+  "headline": "Updated headline",
+  "summary": "Updated summary",
+  "location": "Remote",
+  "email": "hello@example.com",
+  "linkedin_url": "https://www.linkedin.com",
+  "github_url": "https://github.com",
+  "resume_url": "/resume",
+  "profile_image": "",
+  "focus_area": "Data & AI",
+  "contact_links": {
+    "email": "hello@example.com",
+    "linkedin": "https://www.linkedin.com",
+    "github": "https://github.com"
+  },
+  "featured_projects": [],
+  "degraded_mode": true,
+  "source": "fallback"
+}

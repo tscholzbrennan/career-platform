@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Experience{% endblock %}
+
+{% block content %}
+<section class="section container">
+  <p class="eyebrow">Experience</p>
+  <h1>Career highlights</h1>
+  <div class="timeline">
+    {% for item in experiences %}
+    <article class="timeline-item card">
+      <div class="timeline-meta">
+        <strong>{{ item.role_title }}</strong>
+        <span>{{ item.company_name }}</span>
+        <span>{{ item.start_date }} - {{ item.end_date or 'Present' }}</span>
+      </div>
+      <p>{{ item.summary }}</p>
+      <ul>
+        {% for bullet in item.bullet_points %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

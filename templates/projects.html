@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<section class="section container">
+  <p class="eyebrow">Projects</p>
+  <h1>Selected work</h1>
+  <div class="card-grid">
+    {% for project in projects %}
+    <article class="card">
+      <h3>{{ project.title }}</h3>
+      <p>{{ project.summary }}</p>
+      <div class="tag-row">
+        {% for tag in project.tags %}
+        <span class="tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+      <a href="/projects/{{ project.slug }}">View project</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

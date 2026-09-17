@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-layout">
+    <div>
+      {% if profile.degraded_mode %}
+      <div class="status-banner">Profile is currently showing the saved fallback snapshot.</div>
+      {% endif %}
+      <p class="eyebrow">{{ profile.focus_area }}</p>
+      <h1>{{ profile.headline }}</h1>
+      <p class="lede">{{ profile.summary }}</p>
+      <div class="cta-row">
+        <a class="button primary" href="/projects">View Projects</a>
+        <a class="button secondary" href="/contact">Connect</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h2>Quick profile</h2>
+      <ul>
+        <li>Location: {{ profile.location }}</li>
+        <li>Email: {{ profile.contact_links.email }}</li>
+        <li>Focus: {{ profile.focus_area }}</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section-head">
+    <h2>Featured projects</h2>
+    <a href="/projects">See all</a>
+  </div>
+  <div class="card-grid">
+    {% for project in projects %}
+    <article class="card">
+      <h3>{{ project.title }}</h3>
+      <p>{{ project.summary }}</p>
+      <a href="/projects/{{ project.slug }}">Read case study</a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
