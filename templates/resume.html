@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Resume{% endblock %}
+
+{% block content %}
+<section class="section container narrow">
+  <p class="eyebrow">Resume</p>
+  <h1>Professional summary</h1>
+  <p>{{ profile.summary }}</p>
+  <ul>
+    {% for item in experiences %}
+    <li><strong>{{ item.role_title }}</strong> at {{ item.company_name }}</li>
+    {% endfor %}
+  </ul>
+  <div class="cta-row">
+    <a class="button primary" href="{{ profile.resume_url or '/resume' }}">Download resume</a>
+    <a class="button secondary" href="/contact">Contact me</a>
+  </div>
+</section>
+{% endblock %}

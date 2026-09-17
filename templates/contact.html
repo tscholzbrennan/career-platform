@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Contact{% endblock %}
+
+{% block content %}
+<section class="section container narrow">
+  <p class="eyebrow">Contact</p>
+  <h1>Let’s connect</h1>
+  <ul class="contact-list">
+    <li>Email: <a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a></li>
+    <li>LinkedIn: <a href="{{ profile.contact_links.linkedin }}">{{ profile.contact_links.linkedin }}</a></li>
+    <li>GitHub: <a href="{{ profile.contact_links.github }}">{{ profile.contact_links.github }}</a></li>
+  </ul>
+</section>
+{% endblock %}
