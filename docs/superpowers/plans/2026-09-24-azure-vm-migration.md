@@ -8,14 +8,16 @@
 
 **Tech Stack:** Azure VM (Ubuntu, apt), OpenSSH/scp, git, `uv` (Python package/venv manager), FastAPI + uvicorn, SQLite.
 
+**Status (2026-09-29):** all 8 sections were executed and all 19 steps (including the added 1b) are ticked. The site is live at `http://<VM_PUBLIC_IP>:8000`, reachable only from `<LAPTOP_PUBLIC_IP>`, and serves from the database (`source: database`). Still open: the database content is mostly seed placeholders (see Step 14); the server runs under `nohup`, not a service, so it won't restart if the VM reboots (see Step 16); and the VM costs credits while it runs (see Step 1b to deallocate). All five Review Focus risks actually came up and were checked. #2 turned out not to apply, because the cloned db was already current.
+
 **Spec:** User-supplied migration plan (conversation, 2026-09-24) — categories: Server, Packages, Code, Python, Config, Data, Processes, Verify. No separate spec file exists; this plan is the spec's only written form. Repo state inspected at commit `f3d9803` on `main`.
 
 ## Global Constraints
 
 - The VM (`vm-career-platform` / `rg-career-platform`) already exists — this plan never creates, resizes, or deletes Azure compute resources.
-- All VM access uses `ssh -i ~/.ssh/isba4775_azure azureuser@20.221.247.215` — no other user or key.
-- The VM's public IP is `20.221.247.215` (static, resource `vm-career-platform-ip`), used throughout this document.
-- The laptop's public IP is `157.242.208.214`; NSG `vm-career-platform-nsg` rule `Allow-SSH-Laptop` (priority 300) allows port 22 only from that address. If the laptop's IP changes, SSH will time out until that rule is updated.
+- All VM access uses `ssh -i ~/.ssh/isba4775_azure azureuser@<VM_PUBLIC_IP>` — no other user or key.
+- IP addresses are left out of this public document on purpose. `<VM_PUBLIC_IP>` is the VM's static public IP (resource `vm-career-platform-ip`); look it up with `az vm show -d -g rg-career-platform -n vm-career-platform --query publicIps -o tsv`.
+- `<LAPTOP_PUBLIC_IP>` is the laptop's current public IP; look it up with `curl -s https://api.ipify.org`. NSG `vm-career-platform-nsg` rule `Allow-SSH-Laptop` (priority 300) allows port 22 only from that address. If the laptop's IP changes, SSH will time out until that rule is updated.
 - The VM may be deallocated between sessions (it was on 2026-09-29) — Step 1b starts it.
 - `.env` and `career_platform.db` must never be `git add`ed — `.env` is already gitignored; `career_platform.db` currently is *not* gitignored (see Review Focus #2) but this plan does not change that, only works around it.
 - Nothing in this document is to be executed until the user explicitly says to run it — this is a write-up, not an action.
@@ -73,13 +75,13 @@ How we undo it: `az vm deallocate -g rg-career-platform -n vm-career-platform` (
 
 - [x] **Step 2: Test SSH connectivity to the VM (laptop)**
 
-> **Done 2026-09-29:** the first attempt timed out for two reasons: the plan had the laptop's IP (157.242.208.214) instead of the VM's (20.221.247.215), and the VM was deallocated. After both were fixed, SSH printed `connected`, `azureuser`, and `Ubuntu 24.04.4 LTS (noble)`. The first run used `-o StrictHostKeyChecking=accept-new`, which saved the VM's host key to `~/.ssh/known_hosts`.
+> **Done 2026-09-29:** the first attempt timed out for two reasons: the plan had the laptop's IP (<LAPTOP_PUBLIC_IP>) instead of the VM's (<VM_PUBLIC_IP>), and the VM was deallocated. After both were fixed, SSH printed `connected`, `azureuser`, and `Ubuntu 24.04.4 LTS (noble)`. The first run used `-o StrictHostKeyChecking=accept-new`, which saved the VM's host key to `~/.ssh/known_hosts`.
 
 Where it runs: laptop.
 
 What to run:
 ```bash
-ssh -i ~/.ssh/isba4775_azure azureuser@20.221.247.215 "echo connected && whoami && lsb_release -a"
+ssh -i ~/.ssh/isba4775_azure azureuser@<VM_PUBLIC_IP> "echo connected && whoami && lsb_release -a"
 ```
 
 Why: confirms the VM is up, the key/user pair is accepted, and shows the exact OS/version before any package step assumes an Ubuntu apt layout.
@@ -90,7 +92,7 @@ How we undo it: N/A — read-only.
 
 - [x] **Step 3: Open inbound port 8000 for the app (laptop, Azure CLI)**
 
-> **Done 2026-09-29:** created from the Azure CLI instead of the portal, and limited to the laptop's IP (`157.242.208.214/32`) instead of `Any`. Provisioning state was `Succeeded`. The NSG now has `Allow-SSH-Laptop` (300, port 22) and `Allow-Uvicorn-8000` (320, port 8000), both allowing only that source. If other people need to reach the site later, widen this rule's source.
+> **Done 2026-09-29:** created from the Azure CLI instead of the portal, and limited to the laptop's IP (`<LAPTOP_PUBLIC_IP>/32`) instead of `Any`. Provisioning state was `Succeeded`. The NSG now has `Allow-SSH-Laptop` (300, port 22) and `Allow-Uvicorn-8000` (320, port 8000), both allowing only that source. If other people need to reach the site later, widen this rule's source.
 
 Where it runs: laptop (Azure CLI). The portal equivalent: `vm-career-platform` → **Networking** → **Inbound port rules** → **Add**, with the same values.
 
@@ -98,7 +100,7 @@ What to run:
 ```bash
 az network nsg rule create -g rg-career-platform --nsg-name vm-career-platform-nsg \
   -n Allow-Uvicorn-8000 --priority 320 --direction Inbound --access Allow --protocol Tcp \
-  --source-address-prefixes 157.242.208.214/32 --destination-port-ranges 8000
+  --source-address-prefixes <LAPTOP_PUBLIC_IP>/32 --destination-port-ranges 8000
 ```
 
 Why: `uvicorn` will listen on `0.0.0.0:8000`, but Azure blocks all inbound traffic by default except rules that exist explicitly. Port 22 already works because a rule for it exists (you can SSH in); port 8000 needs its own rule or the Verify step will time out even though the app is running correctly.
@@ -107,7 +109,7 @@ How we check it worked:
 ```bash
 az network nsg rule list -g rg-career-platform --nsg-name vm-career-platform-nsg -o table
 ```
-`Allow-Uvicorn-8000` is listed with Access `Allow`, port `8000`, source `157.242.208.214/32`.
+`Allow-Uvicorn-8000` is listed with Access `Allow`, port `8000`, source `<LAPTOP_PUBLIC_IP>/32`.
 
 How we undo it: `az network nsg rule delete -g rg-career-platform --nsg-name vm-career-platform-nsg -n Allow-Uvicorn-8000`
 
@@ -210,7 +212,7 @@ Where it runs: laptop.
 
 What to run:
 ```bash
-cd /Users/tristanbrennan/Desktop/GITHUB/career-platform
+cd career-platform   # the repo root on the laptop
 uv init --bare --vcs none --no-readme --name career-platform --python 3.12
 uv python pin 3.12
 uv add -r requirements.txt
@@ -229,7 +231,7 @@ How we undo it: `rm pyproject.toml uv.lock .python-version` and `rm -rf .venv`.
 
 - [x] **Step 9: Commit and push the new project files (laptop)**
 
-> **Done 2026-09-29:** the user OK'd the push to `main` and asked to include this plan. It went as two commits pushed together: this plan (`docs:`), then `pyproject.toml` + `uv.lock` + `.python-version` (`chore:`). Local `main` matched `origin/main` before the push. `.DS_Store` was left out.
+> **Done 2026-09-29:** the user OK'd the push to `main` and asked to include this plan. It went as two commits pushed together: this plan (`docs:`), then `pyproject.toml` + `uv.lock` + `.python-version` (`chore:`). Local `main` matched `origin/main` before the push. `.DS_Store` was left out. Commits: `27fae04` (plan) and `46d9925` (uv files); the push was `f3d9803..46d9925 main -> main`.
 
 Where it runs: laptop.
 
@@ -250,7 +252,9 @@ Shows the new commit; the GitHub repo page lists `pyproject.toml` and `uv.lock`.
 
 How we undo it: since this is already pushed to the shared remote, use `git revert <commit-sha>` followed by `git push origin main` rather than rewriting history.
 
-- [ ] **Step 10: Pull the new files onto the VM (VM)**
+- [x] **Step 10: Pull the new files onto the VM (VM)**
+
+> **Done 2026-09-29:** a fast-forward pull (4 files, 914 insertions) moved the VM to `46d9925`. `pyproject.toml`, `uv.lock`, and `.python-version` are present; this plan also arrived at `docs/superpowers/plans/`. The undo's `<previous-commit-sha>` is `f3d9803`.
 
 Where it runs: VM.
 
@@ -269,7 +273,9 @@ Both files exist.
 
 How we undo it: `git checkout <previous-commit-sha> -- pyproject.toml uv.lock` (or delete both files) — check `git log` on the VM for `<previous-commit-sha>`.
 
-- [ ] **Step 11: Install uv on the VM (VM)**
+- [x] **Step 11: Install uv on the VM (VM)**
+
+> **Done 2026-09-29:** installed `uv 0.12.21 (x86_64-unknown-linux-gnu)` at `/home/azureuser/.local/bin/uv`. As on the laptop, the installer added `. "$HOME/.local/bin/env"` to `~/.bashrc` line 119 and `~/.profile` line 29, and the undo below covers those lines. SSH commands that aren't interactive login shells need `source $HOME/.local/bin/env` first to find `uv`; Steps 12, 15 and 16 do that.
 
 Where it runs: VM.
 
@@ -287,9 +293,11 @@ uv --version
 ```
 Prints a version string.
 
-How we undo it: `rm ~/.local/bin/uv ~/.local/bin/uvx`.
+How we undo it: `rm ~/.local/bin/uv ~/.local/bin/uvx ~/.local/bin/env ~/.local/bin/env.fish`, then delete the `. "$HOME/.local/bin/env"` line from `~/.bashrc` and `~/.profile`.
 
-- [ ] **Step 12: Install the exact locked dependencies (VM)**
+- [x] **Step 12: Install the exact locked dependencies (VM)**
+
+> **Done 2026-09-29:** `uv sync --frozen` exited 0. It used the VM's system `CPython 3.12.3` at `/usr/bin/python3.12`, so no Python download was needed, and created `~/career-platform/.venv`. The check printed `0.115.0 3.12.3 /home/azureuser/career-platform/.venv/bin/python`. **Extra check:** `uv run python -m pytest -q` → `10 passed` on the VM. Afterwards `career_platform.db` still had SHA-256 `b37b70f5…c49543fad9` and `git status` was clean, so the tests don't modify the database.
 
 Where it runs: VM.
 
@@ -310,7 +318,9 @@ How we undo it: `rm -rf .venv`.
 
 ### Config
 
-- [ ] **Step 13: Create .env from .env.example (VM)**
+- [x] **Step 13: Create .env from .env.example (VM)**
+
+> **Done 2026-09-29:** a pre-check confirmed no `.env` existed. I ran `cp -n` (no-clobber) instead of plain `cp` so an existing file could never be overwritten; on this `cp`, `-n` prints a harmless portability warning. Results: `diff .env.example .env` shows identical files; `git check-ignore` confirms `.env` is ignored (`.gitignore:151`); `app.config.settings` loads `Career Platform | career_platform.db | data/fallback-profile.json`. **Caveat:** these values are the same as the defaults in `app/config.py`, so this check can't tell whether the app read `.env` or used its defaults. The result is identical either way. It will only matter if `.env` is changed to non-default values later.
 
 Where it runs: VM.
 
@@ -331,7 +341,13 @@ How we undo it: `rm .env`.
 
 ### Data
 
-- [ ] **Step 14: Copy the SQLite database to the VM (laptop)**
+- [x] **Step 14: Copy the SQLite database to the VM (laptop)**
+
+> **Done 2026-09-29:** re-checked the hashes first. The laptop and VM copies were already identical (`b37b70f5…c49543fad9`). Ran the scp anyway, as planned, and it exited 0. The VM hash afterwards was the same, the file size was 65536 bytes, and `git status` on the VM was clean. **Extra checks:** `PRAGMA integrity_check` → `ok`. Tables and row counts: `profiles` 1, `experiences` 1, `projects` 2, `education` / `skills` / `media` / `fallback_profile_snapshots` 0.
+>
+> **Finding, content:** the database holds **mostly the seed placeholders from `app/seed.py`**. Projects are `Demand Forecasting Dashboard` and `AI Research Briefing Tool`; the experience is `Data Analyst` at `Example Company`; the email is `hello@example.com`. The only non-seed value is the profile headline, `Updated headline`. The migration copied this exactly. Whether this is the content the user wants live is the user's decision. Steps 17–19 below were rewritten to check for these actual values, instead of treating the seed titles as a sign the copy failed.
+>
+> **Finding, plan defect:** the table is `profiles`, not `profile`. Step 19's query has been fixed.
 
 > **Heads-up (found in Step 6, 2026-09-29):** the VM's cloned db already matches the laptop's (SHA-256 `b37b70f5…c49543fad9`). This copy only matters if the laptop db changes before this step runs. Re-check with `shasum -a 256 career_platform.db` on the laptop before copying.
 
@@ -339,7 +355,7 @@ Where it runs: laptop.
 
 What to run:
 ```bash
-scp -i ~/.ssh/isba4775_azure ./career_platform.db azureuser@20.221.247.215:~/career-platform/career_platform.db
+scp -i ~/.ssh/isba4775_azure ./career_platform.db azureuser@<VM_PUBLIC_IP>:~/career-platform/career_platform.db
 ```
 
 Why: overwrites the stale/seed copy of `career_platform.db` that came through `git clone` (Step 6) with the real, current data from the laptop. `SQLITE_DB_PATH="career_platform.db"` in `.env` is a relative path, so it must land at exactly `~/career-platform/career_platform.db` for the app to pick it up.
@@ -353,11 +369,13 @@ sha256sum ~/career-platform/career_platform.db
 ```
 The two hashes match.
 
-How we undo it: on the VM, `cd ~/career-platform && git checkout -- career_platform.db` restores the git-tracked (stale) version.
+How we undo it: on the VM, `cd ~/career-platform && git checkout -- career_platform.db` restores the git-tracked version. As of 2026-09-29 that version is identical, so this undo changes nothing.
 
 ### Processes
 
-- [ ] **Step 15: Start uvicorn bound to all interfaces (VM)**
+- [x] **Step 15: Start uvicorn bound to all interfaces (VM)**
+
+> **Done 2026-09-29:** a pre-check showed port 8000 free and no uvicorn running. Over non-interactive SSH there's no terminal to `Ctrl+C`, so I ran it as `timeout 10 uv run uvicorn ...`. The output was `Started server process` → `Application startup complete.` → `Uvicorn running on http://0.0.0.0:8000`, with no traceback, then a clean shutdown when the timeout fired (exit 124, as expected).
 
 Where it runs: VM.
 
@@ -372,7 +390,11 @@ How we check it worked: terminal output shows `Uvicorn running on http://0.0.0.0
 
 How we undo it: `Ctrl+C` in the foreground terminal.
 
-- [ ] **Step 16: Re-run it detached so it survives closing the SSH session (VM)**
+- [x] **Step 16: Re-run it detached so it survives closing the SSH session (VM)**
+
+> **Done 2026-09-29:** launched with the command below plus `< /dev/null`. uvicorn came up at PID 2878 (its `uv run` parent is 2875), listening on `0.0.0.0:8000`, and `curl localhost:8000/api/profile` → `HTTP 200`. **Survival test:** the launching SSH session was forcibly closed. A fresh session afterwards still found uvicorn running and still got `HTTP 200`. The db hash was unchanged (`b37b70f5…c49543fad9`), and `git status` was clean because `uvicorn.log` is gitignored.
+>
+> **Quirk:** the launching `ssh` command never returned by itself. Its `bash -c` wrapper (PID 2873) stays alive, reparented to PID 1, as the parent of `uv run`, and the local ssh client waited on it until it was stopped manually. For future non-interactive launches, use `ssh -n ... 'setsid -f nohup uv run uvicorn ... > uvicorn.log 2>&1 < /dev/null'` so the server is fully detached and ssh returns straight away. The current server was left running rather than restarted, since it works.
 
 Where it runs: VM.
 
@@ -392,11 +414,13 @@ curl -s http://localhost:8000/api/profile
 ```
 `ps` shows a running `uvicorn` process; `curl` returns JSON, not "connection refused".
 
-How we undo it: `pkill -f "uvicorn app.main:app"`.
+How we undo it: `pkill -f "uvicorn app.main:app"`. This also kills the leftover `bash -c` wrapper, because its command line contains the same text. Confirm with `ss -ltn | grep :8000`, which should print nothing.
 
 ### Verify
 
-- [ ] **Step 17: Confirm the app answers locally on the VM (VM)**
+- [x] **Step 17: Confirm the app answers locally on the VM (VM)**
+
+> **Done 2026-09-29:** `HTTP 200` with `"headline":"Updated headline"`, `"summary":"Updated summary"`, `"email":"hello@example.com"`, and the two expected `featured_projects`. The response also reports **`"source":"database"`** and **`"degraded_mode":false`**, which confirms directly that the app is serving from SQLite and not the fallback JSON.
 
 Where it runs: VM.
 
@@ -407,38 +431,42 @@ curl -s http://localhost:8000/api/profile
 
 Why: isolates "is the app itself broken" from "is the network/NSG broken" by checking the shortest possible path first.
 
-How we check it worked: JSON response with profile fields (`headline`, `summary`, `email`, etc. — see `app/models.py`). If the value under `headline` is the seed placeholder ("Data & AI Engineer building practical analytics products") rather than your real headline, the Data section's scp either didn't land or landed in the wrong path — re-check Step 14, not this step.
+How we check it worked: a JSON response with profile fields (`headline`, `summary`, `email`, etc.; see `app/models.py`). Per Step 14, expect `"headline": "Updated headline"` and `"email": "hello@example.com"`. If `headline` is instead the original seed text ("Data & AI Engineer building practical analytics products"), the app isn't reading the copied `career_platform.db`, for example because it started in a different directory. Two other outcomes also mean it isn't reading the database: an empty database that got freshly seeded, or the fallback JSON from `data/fallback-profile.json`.
 
 How we undo it: N/A — read-only.
 
-- [ ] **Step 18: Confirm external reachability and real data (laptop)**
+- [x] **Step 18: Confirm external reachability and real data (laptop)**
+
+> **Done 2026-09-29:** run from the laptop, whose public IP was confirmed as `<LAPTOP_PUBLIC_IP>`. `http://<VM_PUBLIC_IP>:8000/api/profile` → `HTTP 200` with the same values as Step 17 (`source: database`, `degraded_mode: False`). **Extra checks:** every route in `app/main.py` returned 200: `/` (2382 B), `/about`, `/experience`, `/projects`, `/projects/demand-forecasting-dashboard`, `/resume`, `/contact`. The homepage contains `Updated headline` and both project titles. Its stylesheet `/static/css/site.css` → `200 text/css`, 3341 B. `/static/` on its own → 404, which is expected. **Not tested:** that other IPs are blocked. Only one network was available, so Step 3's restriction was verified by reading the firewall rules, not by trying to connect from a different address.
 
 Where it runs: laptop.
 
 What to run:
 ```bash
-curl -s http://20.221.247.215:8000/api/profile
+curl -s http://<VM_PUBLIC_IP>:8000/api/profile
 ```
-Or open `http://20.221.247.215:8000` in a browser.
+Or open `http://<VM_PUBLIC_IP>:8000` in a browser.
 
 Why: this is the end-to-end check — it only passes if the NSG rule (Step 3), the `--host 0.0.0.0` bind (Step 15), and the VM's own OS firewall (if any) all line up simultaneously. A pass here is what "the site answers on the VM" actually means, as opposed to Step 17's VM-local check.
 
-How we check it worked: the homepage renders (or the `curl` returns your real JSON) showing your actual profile/projects, not the seed placeholders (`Demand Forecasting Dashboard` / `AI Research Briefing Tool` are the seed project titles to watch for — if you see exactly those and didn't intend to keep them, the scp step didn't take effect).
+How we check it worked: the homepage renders, or `curl` returns the same JSON as Step 17 (`"headline": "Updated headline"`). The projects page lists `Demand Forecasting Dashboard` and `AI Research Briefing Tool`. Per Step 14 these are the database's actual contents, so seeing them here is expected, not a failure. Only works from the laptop's IP `<LAPTOP_PUBLIC_IP>`, because of Step 3's source restriction.
 
 How we undo it: N/A — read-only. If you want to close external access again afterward, use the NSG rule's undo from Step 3.
 
-- [ ] **Step 19: Confirm the on-disk data independently of the app (VM)**
+- [x] **Step 19: Confirm the on-disk data independently of the app (VM)**
+
+> **Done 2026-09-29:** with the corrected table name, `select headline, email from profiles;` → `Updated headline|hello@example.com`. Extra: `summary` → `Updated summary`; `projects` → `Demand Forecasting Dashboard` and `AI Research Briefing Tool`. These match the app's JSON from Steps 17–18 exactly, so what the site shows is what's in the file.
 
 Where it runs: VM.
 
 What to run:
 ```bash
-sqlite3 ~/career-platform/career_platform.db "select headline, email from profile;"
+sqlite3 ~/career-platform/career_platform.db "select headline, email from profiles;"
 ```
 
 Why: this is what `sqlite3` was installed for in Step 5 — it reads the actual database rows directly, bypassing the app layer entirely. The README notes the app serves a cached fallback JSON snapshot (`data/fallback-profile.json`) when the database is unavailable, so a passing browser check alone doesn't fully rule out "you're looking at the fallback, not the real database."
 
-How we check it worked: output matches your real profile data, not the seed values.
+How we check it worked: output is `Updated headline|hello@example.com`, matching Step 14's reading and Step 17's JSON. If the file's rows and the app's JSON disagree, the app is serving something other than this file.
 
 How we undo it: N/A — read-only.
 
