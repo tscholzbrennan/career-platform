@@ -420,6 +420,21 @@ How we undo it: `pkill -f "uvicorn app.main:app"`. This also kills the leftover 
 
 ### Verify
 
+**Verify results (2026-09-29, migration day).** The details for each check are in Steps 17–19 below.
+
+| # | Check | Where | Command | Expected | Result |
+|---|---|---|---|---|---|
+| 17 | App answers locally | VM | `curl -s http://localhost:8000/api/profile` | HTTP 200, JSON served from the database | ✅ HTTP 200, `"source": "database"`, `"degraded_mode": false` |
+| 18a | API reachable from outside | Laptop | `curl -s http://<VM_PUBLIC_IP>:8000/api/profile` | Same JSON as Step 17 | ✅ HTTP 200, same values |
+| 18b | Every page loads | Laptop | `curl` on `/`, `/about`, `/experience`, `/projects`, `/projects/<slug>`, `/resume`, `/contact` | HTTP 200 on all 7 | ✅ 7/7 HTTP 200 |
+| 18c | Stylesheet loads | Laptop | `curl http://<VM_PUBLIC_IP>:8000/static/css/site.css` | HTTP 200, `text/css` | ✅ HTTP 200, `text/css`, 3341 B |
+| 19 | Database rows match the site | VM | `sqlite3 career_platform.db "select headline, email from profiles;"` | Same values as the JSON | ✅ Matched |
+| — | Server survives SSH disconnect | VM | Kill the launching SSH session, reconnect, `curl` again | Still running, HTTP 200 | ✅ Still running, HTTP 200 |
+| — | Same database on laptop and VM | Both | `shasum -a 256` / `sha256sum` | Hashes match | ✅ Matched |
+| — | Only the laptop can reach port 8000 | Azure | `az network nsg rule list ...` | Source limited to `<LAPTOP_PUBLIC_IP>/32` | ✅ By reading the firewall rules; not tested from a second network |
+
+Re-checked after the resume content replaced the demo data (see the Step 14 follow-up): the live `/api/profile` and all pages returned HTTP 200, and the laptop and VM database hashes matched again.
+
 - [x] **Step 17: Confirm the app answers locally on the VM (VM)**
 
 > **Done 2026-09-29:** `HTTP 200` with `"headline":"Updated headline"`, `"summary":"Updated summary"`, `"email":"hello@example.com"`, and the two expected `featured_projects`. The response also reports **`"source":"database"`** and **`"degraded_mode":false`**, which confirms directly that the app is serving from SQLite and not the fallback JSON.
