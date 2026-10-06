@@ -228,6 +228,8 @@ server {
 EOF
 ```
 
+> **Changed 2026-10-06 (user's request):** `server_name _;` became `server_name tristaninfo.me www.tristaninfo.me;`. No other line changed. The old file was backed up to `~/career-platform.nginx.bak-20261006` on the VM. `nginx -t` passed, so nginx was reloaded, and it's `active`. Because the block is still `default_server`, the bare IP is still served. From the VM, `Host:` `tristaninfo.me`, `www.tristaninfo.me` and the IP each returned `200` with `<title>Home</title>`, and `http://www.tristaninfo.me/` over the Internet returned `200`. From the laptop, both domains got `503` "Web Page Blocked" with no `Server: nginx` header, while the IP got `200`. That's a filter on the laptop's network, not the VM. To undo: `sudo cp ~/career-platform.nginx.bak-20261006 /etc/nginx/sites-available/career-platform && sudo nginx -t && sudo systemctl reload nginx`.
+
 - [x] **Step 3: Turn on this site, turn off the default one, and reload (VM).**
 
 > **Done 2026-10-03:** `sites-enabled/` now holds only `career-platform -> /etc/nginx/sites-available/career-platform`. `nginx -t` gave `syntax is ok` and `test is successful`, the reload succeeded, and the service shows `enabled` and `active`. `sites-available/` still holds both `career-platform` and `default`, so the undo works.
@@ -295,6 +297,8 @@ curl -s --max-time 5 -o /dev/null -w '%{http_code}\n' http://20.221.247.215:8000
 Check: `200`, `200`, then `000` / `8000 closed`. Port 8000 is blocked twice: the NSG has no rule for it, and the app only listens on 127.0.0.1.
 
 Then turn off Wi-Fi on your phone and open `http://20.221.247.215` over cellular. Check: the site loads. This proves the rule works for visitors, not just for your laptop.
+
+> **HTTPS added 2026-10-06 (after this plan, at the user's request):** Certbot was run on the VM outside this session at 22:02 UTC. It got a Let's Encrypt certificate for `tristaninfo.me` and `www.tristaninfo.me` (expires 2027-01-04, renews itself) and rewrote `/etc/nginx/sites-available/career-platform`. The site now runs on `listen 443 ssl`. Port 80 sends `301` to `https://` for both domains and `404` for anything else, **so the bare IP no longer serves the site over `http://`**. With no port 443 rule, HTTPS timed out and the site was unreachable by domain. Claude then added NSG rule `Allow-HTTPS-443` (320, TCP 443, source `*`, Allow), which provisioned as `Succeeded`. Checks from the VM over the Internet: `https://www.tristaninfo.me/`, `https://tristaninfo.me/`, `/projects` and `/static/css/site.css` each gave `200` with a valid certificate (`ssl_verify=0`). The title is `<title>Home</title>`, `/api/profile` gives `"source":"database"`, and `http://www.tristaninfo.me/` sends `301` to `https://www.tristaninfo.me/`. From the laptop, TCP 443 connects, but the laptop's network resets the TLS handshake (the same local filter that blocks the domains), and `:8000` is still closed. Keep the port 80 rule, because the redirect and Certbot renewal both need it. **Undo:** `az network nsg rule delete -g RG-CAREER-PLATFORM --nsg-name vm-career-platform-nsg -n Allow-HTTPS-443`. Do this only if you also undo Certbot's nginx changes, or the domains break again.
 
 **Undo Task 3 (portal, you):** Step 2 only reads, so there's nothing to undo there. Step 1 was your portal change. To close the site to the public again, go to `vm-career-platform-nsg` → Inbound security rules → `Nginx`, and set its source back to your laptop's IP (`My IP address` in the portal fills it in). Alternatively, delete the rule to close port 80 completely.
 
