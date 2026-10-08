@@ -1,12 +1,27 @@
 import os
 import tempfile
 from pathlib import Path
+from urllib.parse import urlparse
 
 # Point the app at a throwaway database and fallback file before app.config is
-# imported, so running the suite never rewrites the real career_platform.db.
+# imported, so running the suite never rewrites the real database. Every test
+# drops all tables, so a non-local TEST_DATABASE_URL is refused outright.
 _TMP_DIR = Path(tempfile.mkdtemp(prefix="career-platform-tests-"))
+
+
+def _test_database_url(environ, sqlite_path) -> str:
+    url = environ.get("TEST_DATABASE_URL")
+    if not url:
+        return f"sqlite:///{sqlite_path}"
+    if urlparse(url).hostname not in ("localhost", "127.0.0.1"):
+        raise RuntimeError("TEST_DATABASE_URL must point at a local database")
+    return url
+
+
+os.environ["DATABASE_URL"] = _test_database_url(os.environ, _TMP_DIR / "test.db")
 os.environ["SQLITE_DB_PATH"] = str(_TMP_DIR / "test.db")
 os.environ["FALLBACK_PROFILE_PATH"] = str(_TMP_DIR / "fallback-profile.json")
+os.environ.pop("RAILWAY_ENVIRONMENT_NAME", None)
 
 import pytest  # noqa: E402
 
