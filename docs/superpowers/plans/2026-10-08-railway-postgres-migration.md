@@ -51,6 +51,8 @@ after:  visitor ─▶ Cloudflare DNS (CNAME, flattened) ─▶ Railway edge (TL
 
 ---
 
+> **Executed 2026-10-08 (code tasks only, per the user; nothing on Railway was created or changed):** branch `feat/railway-postgres`, commits `ad66ac2` (Task 1), `2a25709` (Task 2), `ae51f29` (Task 3, Steps 1–3). psycopg resolved to **3.3.6**. 45 tests pass on SQLite and on local Postgres 16 (Homebrew, `brew services`). The ID-counter test was watched failing on Postgres first (`3 == 10`) before `setval` was added. The rehearsal copied the repo DB into local Postgres; all 6 pages and the 404 were byte-identical to the SQLite-served site. Step 3 was a push only: no PR and no merge to `main`, since merging may auto-deploy. Task 0 and Task 3 Steps 4–6 onward are not done.
+
 ### Task 0: Railway preflight (read-only)
 
 **Files:** none (results get written into this plan's "Where things stand" table).
@@ -94,7 +96,7 @@ Record the exact Postgres service name (used in `${{<name>.DATABASE_URL}}`), the
 **Interfaces:**
 - Produces: `app.config.resolve_database_url(raw: str, sqlite_path: str, on_railway: bool) -> str`. `Settings.DATABASE_URL: str = ""`. `app.db.engine` is built from the resolved URL. `conftest._test_database_url() -> str`.
 
-- [ ] **Step 1: Write the failing tests** in `tests/test_database_url.py`:
+- [x] **Step 1: Write the failing tests** in `tests/test_database_url.py`:
 
 ```python
 import pytest
@@ -139,12 +141,12 @@ def test_conftest_rejects_remote_test_database():
 
 There's no `tests/__init__.py`, so pytest registers the conftest as the top-level module `conftest` (checked 2026-10-08). Don't add an `__init__.py`: that renames the module and breaks this import.
 
-- [ ] **Step 2: Run them and confirm they fail.**
+- [x] **Step 2: Run them and confirm they fail.**
 
 Run: `.venv/bin/python -m pytest tests/test_database_url.py -v`
 Expected: FAIL with `ImportError: cannot import name 'resolve_database_url'`.
 
-- [ ] **Step 3: Implement `app/config.py`.**
+- [x] **Step 3: Implement `app/config.py`.**
 
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -176,7 +178,7 @@ def resolve_database_url(raw: str, sqlite_path: str, on_railway: bool) -> str:
 settings = Settings()
 ```
 
-- [ ] **Step 4: Implement `app/db.py`.**
+- [x] **Step 4: Implement `app/db.py`.**
 
 ```python
 import os
@@ -202,7 +204,7 @@ SessionLocal = sessionmaker(bind=engine, autocommit=False, autoflush=False, futu
 Base = declarative_base()
 ```
 
-- [ ] **Step 5: Update `tests/conftest.py`** so the app always gets an explicit test URL. Replace the env-var block at the top (the lines before `import pytest`) with:
+- [x] **Step 5: Update `tests/conftest.py`** so the app always gets an explicit test URL. Replace the env-var block at the top (the lines before `import pytest`) with:
 
 ```python
 import os
@@ -233,7 +235,7 @@ os.environ.pop("RAILWAY_ENVIRONMENT_NAME", None)
 
 Leave the rest of `conftest.py` unchanged.
 
-- [ ] **Step 6: Add the driver.**
+- [x] **Step 6: Add the driver.**
 
 ```bash
 uv add "psycopg[binary]"
@@ -242,7 +244,7 @@ grep -A1 'name = "psycopg"' uv.lock | grep version    # the resolved version, e.
 
 Then pin it exactly in `pyproject.toml` (replace the `>=` range that `uv add` wrote with `==<version>`), run `uv lock`, and add `psycopg[binary]==<version>` to `requirements.txt`. Check: `.venv/bin/python -c "import psycopg; print(psycopg.__version__)"` prints that version. If `.venv` isn't uv-managed, run `uv sync`.
 
-- [ ] **Step 7: Update `.env.example`.**
+- [x] **Step 7: Update `.env.example`.**
 
 ```
 APP_NAME="Career Platform"
@@ -252,12 +254,12 @@ SQLITE_DB_PATH="career_platform.db"
 FALLBACK_PROFILE_PATH="data/fallback-profile.json"
 ```
 
-- [ ] **Step 8: Run the whole suite.**
+- [x] **Step 8: Run the whole suite.**
 
 Run: `.venv/bin/python -m pytest -q`
 Expected: 35 + 7 = 42 passed.
 
-- [ ] **Step 9: Commit** on a branch `feat/railway-postgres` (cut from `main`).
+- [x] **Step 9: Commit** on a branch `feat/railway-postgres` (cut from `main`).
 
 ```bash
 git checkout -b feat/railway-postgres
@@ -277,7 +279,7 @@ git commit -m "feat: read the database from DATABASE_URL with SQLite as the loca
 - Consumes: `app.db.Base`, `app.db.SessionLocal`, `app.migrations.ensure_columns`, `app.models.*`.
 - Produces: `app.copy_database.copy_database(source_url: str, target_url: str, replace: bool = False) -> dict[str, int]` (table name → rows copied). `app.copy_database.TargetNotEmpty(Exception)`. CLI: `python -m app.copy_database --source <url> --target <url> [--replace]`.
 
-- [ ] **Step 1 (user's laptop): Install a local Postgres for tests.**
+- [x] **Step 1 (user's laptop): Install a local Postgres for tests.**
 
 ```bash
 brew install postgresql@16
@@ -287,12 +289,12 @@ brew services start postgresql@16
 
 Check: `/opt/homebrew/opt/postgresql@16/bin/psql -d career_platform_test -c 'select 1'` prints `1`.
 
-- [ ] **Step 2: Run the existing suite on Postgres.**
+- [x] **Step 2: Run the existing suite on Postgres.**
 
 Run: `TEST_DATABASE_URL=postgresql://localhost/career_platform_test .venv/bin/python -m pytest -q`
 Expected: 42 passed. If something fails, fix it in app code (not by skipping the test) and record what you found here. The most likely candidate is ordering: Postgres doesn't guarantee row order without `ORDER BY`. `get_experiences` sorts in Python, and the other content queries order by `id`. `db.query(Profile).first()` has no `ORDER BY`, but there's only one profile.
 
-- [ ] **Step 3: Write the failing tests** in `tests/test_copy_database.py`. They use whatever database the suite is using (SQLite by default, local Postgres when `TEST_DATABASE_URL` is set) as the **target**, and a temp SQLite file as the **source**:
+- [x] **Step 3: Write the failing tests** in `tests/test_copy_database.py`. They use whatever database the suite is using (SQLite by default, local Postgres when `TEST_DATABASE_URL` is set) as the **target**, and a temp SQLite file as the **source**:
 
 ```python
 import pytest
@@ -359,12 +361,12 @@ def test_new_rows_after_copy_get_the_next_id(source_url):
         db.close()
 ```
 
-- [ ] **Step 4: Run them and confirm they fail.**
+- [x] **Step 4: Run them and confirm they fail.**
 
 Run: `.venv/bin/python -m pytest tests/test_copy_database.py -v`
 Expected: FAIL with `ModuleNotFoundError: No module named 'app.copy_database'`.
 
-- [ ] **Step 5: Implement `app/copy_database.py`.**
+- [x] **Step 5: Implement `app/copy_database.py`.**
 
 ```python
 """Copy every table from one database into another (SQLite → Railway Postgres).
@@ -439,17 +441,17 @@ if __name__ == "__main__":
     main()
 ```
 
-- [ ] **Step 6: Run the new tests on both databases.**
+- [x] **Step 6: Run the new tests on both databases.**
 
 Run: `.venv/bin/python -m pytest tests/test_copy_database.py -v`, then `TEST_DATABASE_URL=postgresql://localhost/career_platform_test .venv/bin/python -m pytest tests/test_copy_database.py -v`
 Expected: 3 passed each time. The Postgres run is the one that actually exercises `setval`.
 
-- [ ] **Step 7: Run the full suite on both.**
+- [x] **Step 7: Run the full suite on both.**
 
 Run: `.venv/bin/python -m pytest -q && TEST_DATABASE_URL=postgresql://localhost/career_platform_test .venv/bin/python -m pytest -q`
 Expected: 45 passed, twice.
 
-- [ ] **Step 8: Rehearse with the real data on local Postgres.**
+- [x] **Step 8: Rehearse with the real data on local Postgres.**
 
 ```bash
 /opt/homebrew/opt/postgresql@16/bin/createdb career_platform_rehearsal
@@ -459,7 +461,7 @@ DATABASE_URL=postgresql://localhost/career_platform_rehearsal .venv/bin/uvicorn 
 
 Check: it prints `profiles: 1, experiences: 3, projects: 1, skills: 12, education: 1, media: 0, fallback_profile_snapshots: 0`. Every page at `http://localhost:8001` looks the same as `http://localhost:8000` running on SQLite, and `curl -s localhost:8001/api/profile` shows `"source": "database"` and the real name.
 
-- [ ] **Step 9: Commit.**
+- [x] **Step 9: Commit.**
 
 ```bash
 git add app/copy_database.py tests/test_copy_database.py
@@ -474,7 +476,7 @@ git commit -m "feat: add a command that copies the SQLite data into Postgres"
 - Create: `railway.json`
 - Modify: `README.md` (setup + deploy sections)
 
-- [ ] **Step 1: Write `railway.json`.**
+- [x] **Step 1: Write `railway.json`.**
 
 ```json
 {
@@ -483,7 +485,7 @@ git commit -m "feat: add a command that copies the SQLite data into Postgres"
     "builder": "RAILPACK"
   },
   "deploy": {
-    "startCommand": "uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips='*'",
+    "startCommand": "sh -c 'uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips=*'",
     "healthcheckPath": "/",
     "healthcheckTimeout": 60,
     "restartPolicyType": "ON_FAILURE",
@@ -492,11 +494,13 @@ git commit -m "feat: add a command that copies the SQLite data into Postgres"
 }
 ```
 
+> **Deviation 2026-10-08:** wrapped in `sh -c` so `$PORT` expands even if Railway runs the start command without a shell. Checked locally: the exact command booted on `PORT=8103` against Postgres, and stopped with the `DATABASE_URL` error when the variable was empty and `RAILWAY_ENVIRONMENT_NAME` was set.
+
 Railpack detects Python from `pyproject.toml`/`uv.lock` and Python 3.12 from `.python-version`. `--proxy-headers` makes `request.url` show `https` behind Railway's edge. Today that's only used for `request.url.path`, but it keeps any future absolute URLs correct.
 
-- [ ] **Step 2: Update `README.md`.** Replace "built with FastAPI and SQLite" with "built with FastAPI, using PostgreSQL in production (Railway) and SQLite locally". Under **Environment**, add: "`DATABASE_URL` selects the database. Leave it unset to use `career_platform.db`. Run the tests against Postgres with `TEST_DATABASE_URL=postgresql://localhost/career_platform_test pytest` (local databases only)." Add a **Deploy** section: "Pushes to `main` deploy to Railway (`railway.json`). The web service's `DATABASE_URL` references the Postgres service. One-off data copy: `python -m app.copy_database --source sqlite:///… --target \"$DATABASE_PUBLIC_URL\"`."
+- [x] **Step 2: Update `README.md`.** Replace "built with FastAPI and SQLite" with "built with FastAPI, using PostgreSQL in production (Railway) and SQLite locally". Under **Environment**, add: "`DATABASE_URL` selects the database. Leave it unset to use `career_platform.db`. Run the tests against Postgres with `TEST_DATABASE_URL=postgresql://localhost/career_platform_test pytest` (local databases only)." Add a **Deploy** section: "Pushes to `main` deploy to Railway (`railway.json`). The web service's `DATABASE_URL` references the Postgres service. One-off data copy: `python -m app.copy_database --source sqlite:///… --target \"$DATABASE_PUBLIC_URL\"`."
 
-- [ ] **Step 3: Commit, then open a PR** (don't merge yet, since merging may deploy).
+- [x] **Step 3: Commit, then open a PR** (don't merge yet, since merging may deploy).
 
 ```bash
 git add railway.json README.md
