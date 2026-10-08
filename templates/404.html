@@ -3,12 +3,17 @@
 {% block title %}Page not found{% endblock %}
 
 {% block content %}
-<section class="section container narrow">
-  <h1>Page not found</h1>
-  <p>That page doesn't exist or has moved.</p>
-  <div class="cta-row">
-    <a class="button primary" href="/">Go to the home page</a>
-    <a class="button secondary" href="/projects">See all projects</a>
+<div class="r">
+  <div class="c s12 name-cell"><h1><span class="err">#REF!</span> Page not found</h1></div>
+</div>
+<div class="r">
+  <div class="c s8"><p>That page doesn't exist or has moved.</p></div>
+  <div class="c s4 blank"></div>
+</div>
+<div class="r">
+  <div class="c s12 btn-row">
+    <a class="btn primary" href="/">Go to the home page</a>
+    <a class="btn" href="/projects">See all projects</a>
   </div>
-</section>
+</div>
 {% endblock %}

@@ -7,6 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import app.models  # noqa: F401  # register SQLAlchemy models before creating tables
 from app.db import Base, SessionLocal, engine
+from app.formatting import duration_months, total_months
 from app.migrations import ensure_columns
 from app.seed import seed_data
 from app.services.content_service import (
@@ -21,6 +22,8 @@ from app.services.profile_service import get_public_profile
 app = FastAPI(title="Career Platform")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
+templates.env.filters["months"] = lambda item: duration_months(item.start_date, item.end_date)
+templates.env.globals["total_months"] = total_months
 
 
 @app.exception_handler(StarletteHTTPException)
@@ -51,7 +54,7 @@ async def home(request: Request):
     projects = get_projects() or profile.get("featured_projects", [])
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "profile": profile, "projects": projects[:3]},
+        {"request": request, "profile": profile, "projects": projects[:3], "experiences": get_experiences()},
     )
 
 

@@ -3,46 +3,95 @@
 {% block page_title %}{{ profile.full_name or profile.headline }} · {{ profile.focus_area }}{% endblock %}
 
 {% block content %}
-<section class="hero">
-  <div class="container hero-layout">
-    <div>
-      <h1>{{ profile.full_name or profile.headline }}</h1>
-      {% if profile.full_name %}<p class="role">{{ profile.headline }}</p>{% endif %}
-      {% if profile.seeking %}<p class="seeking">{{ profile.seeking }}</p>{% endif %}
-      <p class="lede">{{ profile.summary }}</p>
-      <div class="cta-row">
-        <a class="button primary" href="/contact">Get in touch</a>
-        <a class="button secondary" href="/resume">View resume</a>
-      </div>
-    </div>
-    <div class="hero-card">
-      <h2>At a glance</h2>
-      <ul class="glance">
-        {% for item in profile.highlights or [] %}
-        <li>{{ item }}</li>
-        {% endfor %}
-        <li>{{ profile.location }}</li>
-        <li><a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a></li>
-      </ul>
-    </div>
+{% set has_resume = profile.resume_url and profile.resume_url != '/resume' %}
+<div class="r">
+  <div class="c s12 name-cell" data-formula='="{{ profile.full_name or profile.headline }}"'>
+    <h1>{{ profile.full_name or profile.headline }}</h1>
+    {% if profile.full_name %}<p class="role">{{ profile.headline }}</p>{% endif %}
   </div>
-</section>
+</div>
+
+{% if profile.seeking %}
+<div class="r selected">
+  <div class="c s12" data-formula='=TARGET("Data Analyst", "Business Analyst", "Full-time", "May 2027")'>
+    <p class="seeking">{{ profile.seeking }}</p>
+  </div>
+</div>
+{% endif %}
+
+<div class="r">
+  {% set facts = profile.highlights or [] %}
+  {% for item in facts[:4] %}
+  {% if item is mapping %}
+  <div class="c s2 fact{% if item.source %} sourced{% endif %}" data-formula='=SOURCE("{{ item.source or "Tristan" }}")'{% if item.source %} tabindex="0"{% endif %}>
+    <strong>{{ item.value }}</strong>
+    {% if item.note %}<span>{{ item.note }}</span>{% endif %}
+    {% if item.source %}<small class="sr-only">Source: {{ item.source }}</small>{% endif %}
+  </div>
+  {% else %}
+  <div class="c s2 fact"><strong>{{ item }}</strong></div>
+  {% endif %}
+  {% endfor %}
+  {% set spare = 8 - 2 * (facts[:4]|length) %}
+  {% if spare %}<div class="c s{{ spare }} blank"></div>{% endif %}
+  <div class="c s4 actions" data-formula='=HYPERLINK("mailto:{{ profile.contact_links.email }}")'>
+    <a class="btn primary" href="mailto:{{ profile.contact_links.email }}">Email {{ (profile.full_name or '').split(' ')[0] or 'me' }}</a>
+    {% if has_resume %}<a class="btn" href="{{ profile.resume_url }}" download>Download resume (PDF)</a>{% endif %}
+  </div>
+</div>
+
+<div class="r">
+  <div class="c s8" data-formula='=SUMMARY()'>
+    <p class="lede">{{ profile.summary }}</p>
+  </div>
+  <div class="c s4">
+    <ul class="meta-list">
+      <li>{{ profile.location }}</li>
+      <li><a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a></li>
+      {% if profile.contact_links.linkedin %}<li><a href="{{ profile.contact_links.linkedin }}">LinkedIn profile</a></li>{% endif %}
+    </ul>
+  </div>
+</div>
+
+{% if experiences %}
+{% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
+<div class="r">
+  <div class="c s12 head-cell"><h2>Work experience</h2><a href="/experience">Full details</a></div>
+</div>
+<div class="r">
+  <div class="c s12 table-cell">
+    <table class="xl stack">
+      <thead><tr><th scope="col">Role</th><th scope="col">Organization</th><th scope="col">Start</th><th scope="col">End</th><th scope="col" class="num">Months</th></tr></thead>
+      <tbody>
+        {% for item in work %}
+        <tr>
+          <td data-label="Role"><strong>{{ item.role_title }}</strong></td>
+          <td data-label="Organization">{{ item.company_name }}</td>
+          <td data-label="Start">{{ item.start_date }}</td>
+          <td data-label="End">{{ item.end_date or 'Present' }}</td>
+          <td data-label="Months" class="num">{{ item | months or '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot><tr><td colspan="4">Total work experience</td><td class="num">{{ total_months(work) }} months</td></tr></tfoot>
+    </table>
+  </div>
+</div>
+{% endif %}
 
 {% if projects %}
-<section class="section container">
-  <div class="section-head">
-    <h2>Featured projects</h2>
-    <a href="/projects">See all</a>
-  </div>
-  <div class="card-grid">
-    {% for project in projects %}
-    <article class="card">
-      <h3>{{ project.title }}</h3>
-      <p>{{ project.summary }}</p>
-      <a href="/projects/{{ project.slug }}">Read the case study</a>
-    </article>
-    {% endfor %}
-  </div>
-</section>
+<div class="r">
+  <div class="c s12 head-cell"><h2>Featured projects</h2><a href="/projects">See all</a></div>
+</div>
+<div class="r">
+  {% for project in projects[:2] %}
+  <article class="c s6">
+    <h3>{{ project.title }}</h3>
+    <p>{{ project.summary }}</p>
+    <a href="/projects/{{ project.slug }}">Read the case study</a>
+  </article>
+  {% endfor %}
+  {% if projects[:2]|length == 1 %}<div class="c s6 blank"></div>{% endif %}
+</div>
 {% endif %}
 {% endblock %}

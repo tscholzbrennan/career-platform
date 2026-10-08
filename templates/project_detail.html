@@ -3,28 +3,34 @@
 {% block title %}{{ project.title }}{% endblock %}
 
 {% block content %}
-<section class="section container narrow">
-  <p><a href="/projects">All projects</a></p>
-  <h1>{{ project.title }}</h1>
-  <p>{{ project.summary }}</p>
-  <div class="tag-row">
-    {% for tag in project.tags %}
-    <span class="tag">{{ tag }}</span>
-    {% endfor %}
+<div class="r">
+  <div class="c s12"><a href="/projects">All projects</a></div>
+</div>
+<div class="r">
+  <div class="c s12 name-cell">
+    <h1>{{ project.title }}</h1>
+    <p class="role">{{ project.summary }}</p>
   </div>
-  <p>{{ project.description }}</p>
-  {% if project.metrics %}
-  <ul>
-    {% for metric in project.metrics %}
-    <li>{{ metric }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-  {% if project.repo_url %}
-  <p><a href="{{ project.repo_url }}">Repository</a></p>
-  {% endif %}
-  {% if project.demo_url %}
-  <p><a href="{{ project.demo_url }}">Demo</a></p>
-  {% endif %}
-</section>
+</div>
+<div class="r">
+  <div class="c s8 prose">
+    <p>{{ project.description }}</p>
+    {% if project.metrics %}
+    <ul class="bullets">{% for metric in project.metrics %}<li>{{ metric }}</li>{% endfor %}</ul>
+    {% endif %}
+  </div>
+  <div class="c s4">
+    {% if project.role %}<p><strong>Role:</strong> {{ project.role }}</p>{% endif %}
+    {% if project.tech_stack %}<ul class="tags">{% for item in project.tech_stack %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+    {% if project.tags %}<ul class="tags">{% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}</ul>{% endif %}
+  </div>
+</div>
+{% if project.repo_url or project.demo_url %}
+<div class="r">
+  <div class="c s12 btn-row">
+    {% if project.repo_url %}<a class="btn primary" href="{{ project.repo_url }}">View the code</a>{% endif %}
+    {% if project.demo_url %}<a class="btn" href="{{ project.demo_url }}">Live demo</a>{% endif %}
+  </div>
+</div>
+{% endif %}
 {% endblock %}

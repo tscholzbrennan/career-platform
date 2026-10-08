@@ -9,7 +9,7 @@ from app.services.content_service import get_experiences
 
 
 def _main(html):
-    return html.split("<main>", 1)[1].split("</main>", 1)[0]
+    return re.split(r"<main[^>]*>", html, maxsplit=1)[1].split("</main>", 1)[0]
 
 
 def _add(*rows):

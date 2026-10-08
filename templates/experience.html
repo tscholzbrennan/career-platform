@@ -2,44 +2,72 @@
 
 {% block title %}Experience{% endblock %}
 
-{% macro experience_card(item) %}
-<article class="timeline-item card">
-  <div class="timeline-meta">
-    <strong>{{ item.role_title }}</strong>
-    <span>{{ item.company_name }}{% if item.location %} · {{ item.location }}{% endif %}</span>
-    <span class="dates">{{ item.start_date }} – {{ item.end_date or 'Present' }}</span>
+{% macro role_table(items, show_total) %}
+{% if show_total %}
+<div class="r">
+  <div class="c s12 table-cell">
+    <table class="xl stack">
+      <thead><tr><th scope="col">Role</th><th scope="col">Organization</th><th scope="col">Location</th><th scope="col">Start</th><th scope="col">End</th><th scope="col" class="num">Months</th></tr></thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td data-label="Role"><strong>{{ item.role_title }}</strong></td>
+          <td data-label="Organization">{{ item.company_name }}</td>
+          <td data-label="Location">{{ item.location or '' }}</td>
+          <td data-label="Start">{{ item.start_date }}</td>
+          <td data-label="End">{{ item.end_date or 'Present' }}</td>
+          <td data-label="Months" class="num">{{ item | months or '' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      {% if show_total %}
+      <tfoot><tr><td colspan="5">Total work experience</td><td class="num">{{ total_months(items) }} months</td></tr></tfoot>
+      {% endif %}
+    </table>
   </div>
-  {% if item.bullet_points %}
-  <ul>
-    {% for bullet in item.bullet_points %}
-    <li>{{ bullet }}</li>
-    {% endfor %}
-  </ul>
-  {% else %}
-  <p>{{ item.summary }}</p>
-  {% endif %}
-</article>
+</div>
+{% endif %}
+{% for item in items %}
+<div class="r">
+  <div class="c s3 who" data-formula='=DATEDIF("{{ item.start_date }}", "{{ item.end_date or 'TODAY()' }}", "m") + 1'>
+    <strong>{{ item.role_title }}</strong>
+    {% if not show_total %}
+    <span>{{ item.company_name }}</span>
+    <span>{{ item.start_date }} – {{ item.end_date or 'Present' }}</span>
+    {% endif %}
+  </div>
+  <div class="c s9">
+    {% if item.bullet_points %}
+    <ul class="bullets">
+      {% for bullet in item.bullet_points %}<li>{{ bullet }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <p>{{ item.summary }}</p>
+    {% endif %}
+  </div>
+</div>
+{% endfor %}
 {% endmacro %}
 
 {% block content %}
 {% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
 {% set activities = experiences | selectattr('category', 'equalto', 'activity') | list %}
-<section class="section container">
-  <h1>Experience</h1>
-  {% if not experiences %}
-  <p>My experience details are being updated. {% if profile.resume_url and profile.resume_url != '/resume' %}You can <a href="{{ profile.resume_url }}" download>download my resume</a> for the full picture.{% else %}Please <a href="/contact">get in touch</a> for my resume.{% endif %}</p>
-  {% endif %}
-  {% if work %}
-  <h2>Work experience</h2>
-  <div class="timeline">
-    {% for item in work %}{{ experience_card(item) }}{% endfor %}
+<div class="r">
+  <div class="c s12 name-cell"><h1>Experience</h1></div>
+</div>
+{% if not experiences %}
+<div class="r">
+  <div class="c s12 empty">
+    <p>My experience details are being updated. {% if profile.resume_url and profile.resume_url != '/resume' %}You can <a href="{{ profile.resume_url }}" download>download my resume</a> for the full picture.{% else %}Please <a href="/contact">get in touch</a> for my resume.{% endif %}</p>
   </div>
-  {% endif %}
-  {% if activities %}
-  <h2>Leadership &amp; activities</h2>
-  <div class="timeline">
-    {% for item in activities %}{{ experience_card(item) }}{% endfor %}
-  </div>
-  {% endif %}
-</section>
+</div>
+{% endif %}
+{% if work %}
+<div class="r"><div class="c s12 head-cell"><h2>Work experience</h2></div></div>
+{{ role_table(work, true) }}
+{% endif %}
+{% if activities %}
+<div class="r"><div class="c s12 head-cell"><h2>Leadership &amp; activities</h2></div></div>
+{{ role_table(activities, false) }}
+{% endif %}
 {% endblock %}

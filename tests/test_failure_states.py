@@ -1,5 +1,6 @@
 import json
 import os
+import re
 
 import pytest
 from fastapi.testclient import TestClient
@@ -101,4 +102,4 @@ def test_empty_project_list_has_a_helpful_empty_state():
     client = TestClient(app)
     assert "Featured projects" not in client.get("/").text
     projects_html = client.get("/projects").text
-    assert "github.com/test-person" in projects_html.split("<main>")[1]
+    assert "github.com/test-person" in re.split(r"<main[^>]*>", projects_html)[1].split("</main>")[0]

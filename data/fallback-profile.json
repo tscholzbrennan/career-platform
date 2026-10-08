@@ -12,9 +12,26 @@
   "seeking": "Seeking full-time Data Analyst and Business Analyst roles starting after graduation in May 2027.",
   "about": "I'm a Business Administration student at Loyola Marymount University studying Information Systems and Business Analytics, graduating in May 2027. I'm looking for a full-time data analyst or business analyst role where analysis shapes how a team plans and operates.\n\nAlongside school, I've seen how operations work up close. At West EFX I analyzed budget documentation for U.S. government contracts and coordinated scheduling across teams and inventory. At Collins Visual Media & Step and Repeat LA I directed red carpet and backdrop installation for Hollywood promotional events and kept live operations running. Both taught me that numbers matter most when they help someone make a better call on the ground.\n\nI also build with AI. This site is a class project in AI and cloud computing: I built it with AI coding agents, using plugins like Superpowers to work from a written spec and plan, test changes first, and keep the code organized, then deployed it to an Azure virtual machine over HTTPS. I want to use AI where it makes work faster and more reliable for the people who depend on it.",
   "highlights": [
-    "LMU · BBA, Information Systems & Business Analytics · May 2027",
-    "3.8 GPA · Dean's List · Arrupe Scholarship",
-    "SQL · Python · Excel · AI coding agents"
+    {
+      "value": "LMU · May 2027",
+      "note": "BBA, Information Systems & Business Analytics",
+      "source": "Resume › Education"
+    },
+    {
+      "value": "3.8 GPA",
+      "note": "Dean's List · Arrupe Scholarship",
+      "source": "Resume › Education"
+    },
+    {
+      "value": "SQL · Python · Excel",
+      "note": "Plus NoSQL, Access and data scraping",
+      "source": "Resume › Additional information"
+    },
+    {
+      "value": "AI coding agents",
+      "note": "Built and deployed this site with Claude Code",
+      "source": "Projects › Career Platform"
+    }
   ],
   "contact_links": {
     "email": "Tscholzbrennan@gmail.com",

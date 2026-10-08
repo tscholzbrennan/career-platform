@@ -3,18 +3,23 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-<section class="section container narrow prose">
-  <h1>About</h1>
-  {% if profile.about %}
-    {% for paragraph in profile.about.split('\n\n') %}
+<div class="r">
+  <div class="c s12 name-cell"><h1>About</h1></div>
+</div>
+{% set paragraphs = profile.about.split('\n\n') if profile.about else [profile.summary] %}
+{% for paragraph in paragraphs %}
+<div class="r">
+  <div class="c s8 prose">
     <p>{{ paragraph }}</p>
-    {% endfor %}
-  {% else %}
-    <p>{{ profile.summary }}</p>
-  {% endif %}
-  <div class="cta-row">
-    <a class="button primary" href="/contact">Get in touch</a>
-    <a class="button secondary" href="/experience">See my experience</a>
   </div>
-</section>
+  <div class="c s4 blank"></div>
+</div>
+{% endfor %}
+<div class="r">
+  <div class="c s8 btn-row">
+    <a class="btn primary" href="/contact">Get in touch</a>
+    <a class="btn" href="/experience">See my experience</a>
+  </div>
+  <div class="c s4 blank"></div>
+</div>
 {% endblock %}

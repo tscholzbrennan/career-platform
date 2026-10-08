@@ -2,20 +2,10 @@ import logging
 from datetime import datetime
 
 from app.db import SessionLocal
+from app.formatting import parse_month
 from app.models import Education, Experience, Project, Skill
 
 logger = logging.getLogger(__name__)
-
-_DATE_FORMATS = ("%b %Y", "%B %Y", "%Y-%m", "%Y")
-
-
-def _parse_month(value):
-    for fmt in _DATE_FORMATS:
-        try:
-            return datetime.strptime((value or "").strip(), fmt)
-        except ValueError:
-            continue
-    return datetime.min
 
 
 def _query(load, default):
@@ -35,7 +25,7 @@ def _query(load, default):
 
 def get_experiences():
     return _query(
-        lambda db: sorted(db.query(Experience).all(), key=lambda item: _parse_month(item.start_date), reverse=True),
+        lambda db: sorted(db.query(Experience).all(), key=lambda item: parse_month(item.start_date) or datetime.min, reverse=True),
         [],
     )
 

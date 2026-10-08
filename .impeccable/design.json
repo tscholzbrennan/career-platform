@@ -1,0 +1,415 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T19:00:19+00:00",
+  "title": "Design System: Tristan Scholz-Brennan",
+  "extensions": {
+    "colorMeta": {
+      "ground": {
+        "role": "neutral",
+        "displayName": "Sheet Ground",
+        "canonical": "oklch(97.5% 0.003 128.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.003 128.5)",
+          "oklch(26.4% 0.003 128.5)",
+          "oklch(37.9% 0.003 128.5)",
+          "oklch(49.3% 0.003 128.5)",
+          "oklch(60.7% 0.003 128.5)",
+          "oklch(72.1% 0.003 128.5)",
+          "oklch(83.6% 0.003 128.5)",
+          "oklch(95.0% 0.003 128.5)"
+        ]
+      },
+      "cell": {
+        "role": "neutral",
+        "displayName": "Cell White",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 0.0)",
+          "oklch(26.4% 0.000 0.0)",
+          "oklch(37.9% 0.000 0.0)",
+          "oklch(49.3% 0.000 0.0)",
+          "oklch(60.7% 0.000 0.0)",
+          "oklch(72.1% 0.000 0.0)",
+          "oklch(83.6% 0.000 0.0)",
+          "oklch(95.0% 0.000 0.0)"
+        ]
+      },
+      "head": {
+        "role": "neutral",
+        "displayName": "Header Grey",
+        "canonical": "oklch(94.7% 0.005 134.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.005 134.9)",
+          "oklch(26.4% 0.005 134.9)",
+          "oklch(37.9% 0.005 134.9)",
+          "oklch(49.3% 0.005 134.9)",
+          "oklch(60.7% 0.005 134.9)",
+          "oklch(72.1% 0.005 134.9)",
+          "oklch(83.6% 0.005 134.9)",
+          "oklch(95.0% 0.005 134.9)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Workbook Ink",
+        "canonical": "oklch(18.7% 0.006 156.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.006 156.6)",
+          "oklch(26.4% 0.006 156.6)",
+          "oklch(37.9% 0.006 156.6)",
+          "oklch(49.3% 0.006 156.6)",
+          "oklch(60.7% 0.006 156.6)",
+          "oklch(72.1% 0.006 156.6)",
+          "oklch(83.6% 0.006 156.6)",
+          "oklch(95.0% 0.006 156.6)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Gridline Muted",
+        "canonical": "oklch(42.9% 0.014 153.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.014 153.3)",
+          "oklch(26.4% 0.014 153.3)",
+          "oklch(37.9% 0.014 153.3)",
+          "oklch(49.3% 0.014 153.3)",
+          "oklch(60.7% 0.014 153.3)",
+          "oklch(72.1% 0.014 153.3)",
+          "oklch(83.6% 0.014 153.3)",
+          "oklch(95.0% 0.014 153.3)"
+        ]
+      },
+      "grid": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "canonical": "oklch(88.3% 0.009 145.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.009 145.5)",
+          "oklch(26.4% 0.009 145.5)",
+          "oklch(37.9% 0.009 145.5)",
+          "oklch(49.3% 0.009 145.5)",
+          "oklch(60.7% 0.009 145.5)",
+          "oklch(72.1% 0.009 145.5)",
+          "oklch(83.6% 0.009 145.5)",
+          "oklch(95.0% 0.009 145.5)"
+        ]
+      },
+      "select": {
+        "role": "primary",
+        "displayName": "Selection Lime",
+        "canonical": "oklch(90.1% 0.202 122.2)",
+        "tonalRamp": [
+          "oklch(15.0% 0.202 122.2)",
+          "oklch(26.4% 0.202 122.2)",
+          "oklch(37.9% 0.202 122.2)",
+          "oklch(49.3% 0.202 122.2)",
+          "oklch(60.7% 0.202 122.2)",
+          "oklch(72.1% 0.202 122.2)",
+          "oklch(83.6% 0.202 122.2)",
+          "oklch(95.0% 0.202 122.2)"
+        ]
+      },
+      "select-gutter": {
+        "role": "primary",
+        "displayName": "Selection Lime, Gutter",
+        "canonical": "oklch(82.9% 0.188 122.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.188 122.1)",
+          "oklch(26.4% 0.188 122.1)",
+          "oklch(37.9% 0.188 122.1)",
+          "oklch(49.3% 0.188 122.1)",
+          "oklch(60.7% 0.188 122.1)",
+          "oklch(72.1% 0.188 122.1)",
+          "oklch(83.6% 0.188 122.1)",
+          "oklch(95.0% 0.188 122.1)"
+        ]
+      },
+      "deep": {
+        "role": "secondary",
+        "displayName": "Ledger Green",
+        "canonical": "oklch(42.2% 0.089 160.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.089 160.8)",
+          "oklch(26.4% 0.089 160.8)",
+          "oklch(37.9% 0.089 160.8)",
+          "oklch(49.3% 0.089 160.8)",
+          "oklch(60.7% 0.089 160.8)",
+          "oklch(72.1% 0.089 160.8)",
+          "oklch(83.6% 0.089 160.8)",
+          "oklch(95.0% 0.089 160.8)"
+        ]
+      },
+      "titlebar-rule": {
+        "role": "neutral",
+        "displayName": "Title-bar Rule",
+        "canonical": "oklch(36.7% 0.013 154.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.013 154.6)",
+          "oklch(26.4% 0.013 154.6)",
+          "oklch(37.9% 0.013 154.6)",
+          "oklch(49.3% 0.013 154.6)",
+          "oklch(60.7% 0.013 154.6)",
+          "oklch(72.1% 0.013 154.6)",
+          "oklch(83.6% 0.013 154.6)",
+          "oklch(95.0% 0.013 154.6)"
+        ]
+      },
+      "error-ref": {
+        "role": "tertiary",
+        "displayName": "#REF! Red",
+        "canonical": "oklch(50.1% 0.178 28.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.178 28.7)",
+          "oklch(26.4% 0.178 28.7)",
+          "oklch(37.9% 0.178 28.7)",
+          "oklch(49.3% 0.178 28.7)",
+          "oklch(60.7% 0.178 28.7)",
+          "oklch(72.1% 0.178 28.7)",
+          "oklch(83.6% 0.178 28.7)",
+          "oklch(95.0% 0.178 28.7)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The person's name on Home only; 112% width via font-stretch."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page title in the first row of every non-Home sheet."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section names in header cells; project names on the Projects sheet."
+      },
+      "title-sm": {
+        "displayName": "Title Small",
+        "purpose": "Project names inside Home's featured cells."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Headline value of a fact cell."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "Home summary paragraph, max 62ch."
+      },
+      "prose": {
+        "displayName": "Prose",
+        "purpose": "Long-form paragraphs, max 66ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default cell text; bulleted lists cap at 60ch."
+      },
+      "table": {
+        "displayName": "Table",
+        "purpose": "Data table cells; heads 700 at 0.8125rem."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Tools, tabs, status bar, formula bar, secondary lines."
+      },
+      "label-sm": {
+        "displayName": "Label Small",
+        "purpose": "Column letters and row numbers."
+      }
+    },
+    "fontSource": {
+      "family": "Archivo",
+      "file": "/static/fonts/archivo-latin-var.woff2",
+      "axes": "wght 100-900, wdth 62-125",
+      "license": "SIL OFL 1.1",
+      "provenance": "static/fonts/README.md"
+    },
+    "shadows": [
+      {
+        "name": "focus-halo",
+        "value": "0 0 0 5px #c8f23a",
+        "purpose": "Lime halo outside the 2px ink focus outline (offset 2px) on every keyboard focus; dropped in fact cells, where the outline is inset -4px."
+      },
+      {
+        "name": "active-tab-rule",
+        "value": "inset 0 -3px 0 #0d5c3d",
+        "purpose": "Green underline on the current sheet tab only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-workbook",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The only easing curve."
+      },
+      {
+        "name": "selection-glide",
+        "value": "transform 220ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Selection outline moving to the active cell; the one authored motion. Instant on layout settle and under reduced motion."
+      },
+      {
+        "name": "button-color",
+        "value": "background-color 120ms, color 120ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Button hover colour change; instant under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "760px",
+        "purpose": "max-width: rows collapse to gutter + one column, gutter 2.25rem, stacked tables, full-width tabs."
+      }
+    ],
+    "layers": [
+      {
+        "name": "selection",
+        "value": "5"
+      },
+      {
+        "name": "formula-bar",
+        "value": "10"
+      },
+      {
+        "name": "tabs",
+        "value": "10"
+      },
+      {
+        "name": "skip-link",
+        "value": "20"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square ink block for the single most important action in a cell.",
+      "html": "<a class=\"ds-btn ds-btn-primary\" href=\"#\">Email Tristan</a>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} :focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--select);} .ds-btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.75rem;padding:0.6rem 1rem;font-weight:700;text-decoration:none;border:1px solid var(--ink);border-radius:0;background:var(--cell);color:var(--ink);font-family:inherit;font-size:1rem;cursor:pointer;transition:background-color 120ms var(--ease),color 120ms var(--ease);} .ds-btn:hover{background:var(--select);} .ds-btn-primary{background:var(--ink);color:var(--cell);} .ds-btn-primary:hover{background:var(--deep);border-color:var(--deep);}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "White outlined block for supporting actions; fills lime on hover.",
+      "html": "<a class=\"ds-btn\" href=\"#\">Download resume (PDF)</a>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} :focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--select);} .ds-btn{display:inline-flex;align-items:center;justify-content:center;min-height:2.75rem;padding:0.6rem 1rem;font-weight:700;text-decoration:none;border:1px solid var(--ink);border-radius:0;background:var(--cell);color:var(--ink);font-family:inherit;font-size:1rem;cursor:pointer;transition:background-color 120ms var(--ease),color 120ms var(--ease);} .ds-btn:hover{background:var(--select);} "
+    },
+    {
+      "name": "Title-bar Tool",
+      "kind": "button",
+      "refersTo": "tool",
+      "description": "Outlined contact tool on the ink title bar.",
+      "html": "<div class=\"ds-titlebar\"><a class=\"ds-brand\" href=\"#\">Tristan Scholz-Brennan</a><span class=\"ds-tools\"><a class=\"ds-tool\" href=\"#\">Email</a><a class=\"ds-tool\" href=\"#\">Resume PDF</a><a class=\"ds-tool\" href=\"#\">LinkedIn</a></span></div>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} :focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--select);} .ds-titlebar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:0.5rem 1rem;background:var(--ink);} .ds-brand{color:var(--cell);font-weight:800;font-stretch:112%;letter-spacing:-0.01em;text-decoration:none;} .ds-tools{display:flex;gap:0.5rem;} .ds-tool{color:var(--cell);text-decoration:none;font-size:0.875rem;font-weight:600;padding:0.35rem 0.7rem;border:1px solid #3a413c;} .ds-tool:hover{background:var(--select);color:var(--ink);border-color:var(--select);}"
+    },
+    {
+      "name": "Formula Bar",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "Sticky strip echoing the active cell's reference and formula or source.",
+      "html": "<div class=\"ds-fbar\"><span></span><span class=\"ds-namebox\">A2</span><span class=\"ds-fx\">fx</span><span class=\"ds-formula\">=TARGET(\"Data Analyst\", \"Business Analyst\", \"Full-time\", \"May 2027\")</span></div>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} .ds-fbar{display:grid;grid-template-columns:3rem 3rem 2.5rem 1fr;min-height:2.25rem;background:var(--cell);border-bottom:1px solid var(--grid);font-size:0.875rem;} .ds-fbar>*{display:flex;align-items:center;padding:0.4rem 0.6rem;border-right:1px solid var(--grid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .ds-fbar>:first-child{background:var(--head);} .ds-namebox{font-weight:700;justify-content:center;} .ds-fx{font-style:italic;color:var(--muted);justify-content:center;} .ds-formula{border-right:0;min-width:0;}"
+    },
+    {
+      "name": "Sheet Rows",
+      "kind": "card",
+      "refersTo": "cell",
+      "description": "Numbered rows of hairline-ruled cells, including the lime selected row and a sourced fact cell with its comment triangle.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-r ds-selected\"><div class=\"ds-c ds-s12\"><p class=\"ds-seeking\">Seeking full-time Data Analyst and Business Analyst roles from May 2027.</p></div></div><div class=\"ds-r\"><div class=\"ds-c ds-s4 ds-fact ds-sourced\"><strong>3.8 GPA</strong><span>Dean's List</span></div><div class=\"ds-c ds-s4 ds-fact\"><strong>80 months</strong><span>Work experience</span></div><div class=\"ds-c ds-s4 ds-blank\"></div></div></div>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} .ds-sheet{counter-reset:row;background:var(--cell);border-top:1px solid var(--grid);} .ds-r{display:grid;grid-template-columns:3rem repeat(12,minmax(0,1fr));border-bottom:1px solid var(--grid);} .ds-r::before{counter-increment:row;content:counter(row);grid-column:1;padding-top:0.6rem;text-align:center;font-size:0.75rem;font-weight:600;color:var(--muted);background:var(--head);border-right:1px solid var(--grid);} .ds-c{position:relative;min-width:0;padding:0.85rem 1rem;background:var(--cell);border-right:1px solid var(--grid);} .ds-s4{grid-column:span 4;} .ds-s12{grid-column:span 12;} .ds-blank{background:transparent;} .ds-selected .ds-c{background:var(--select);} .ds-selected::before{background:#b3d92f;color:var(--ink);} .ds-seeking{margin:0;font-size:1.25rem;font-weight:750;letter-spacing:-0.01em;} .ds-fact strong{display:block;font-size:1.25rem;font-weight:800;letter-spacing:-0.01em;line-height:1.2;} .ds-fact span{display:block;margin-top:0.35rem;font-size:0.875rem;color:var(--muted);} .ds-sourced::after{content:\"\";position:absolute;top:0;right:0;border-style:solid;border-width:0 9px 9px 0;border-color:transparent var(--deep) transparent transparent;}"
+    },
+    {
+      "name": "Data Table",
+      "kind": "custom",
+      "refersTo": "table-head",
+      "description": "Hairline-ruled table with tabular, right-aligned figures and a 2px ink total rule.",
+      "html": "<table class=\"ds-xl\"><thead><tr><th>Role</th><th>Start</th><th class=\"ds-num\">Months</th></tr></thead><tbody><tr><td><strong>Event Operations Technician</strong></td><td>May 2025</td><td class=\"ds-num\">4</td></tr><tr><td><strong>Facility Production Intern</strong></td><td>May 2018</td><td class=\"ds-num\">76</td></tr></tbody><tfoot><tr><td colspan=\"2\">Total work experience</td><td class=\"ds-num\">80 months</td></tr></tfoot></table>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} .ds-xl{width:100%;border-collapse:collapse;font-size:0.9375rem;background:var(--cell);} .ds-xl th,.ds-xl td{padding:0.6rem 1rem;text-align:left;vertical-align:top;border-bottom:1px solid var(--grid);border-right:1px solid var(--grid);} .ds-xl th:last-child,.ds-xl td:last-child{border-right:0;} .ds-xl thead th{background:var(--head);font-size:0.8125rem;font-weight:700;} .ds-xl .ds-num{text-align:right;white-space:nowrap;} .ds-xl tfoot td{font-weight:800;border-top:2px solid var(--ink);border-bottom:0;}"
+    },
+    {
+      "name": "Sheet Tabs",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Bottom-fixed page navigation; the active tab is white with a green inset underline.",
+      "html": "<nav class=\"ds-tabs\"><a href=\"#\" aria-current=\"page\">Home</a><a href=\"#\">About</a><a href=\"#\">Experience</a><a href=\"#\">Projects</a><a href=\"#\">Resume</a><a href=\"#\">Contact</a></nav>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} :focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--select);} .ds-tabs{display:flex;height:2.75rem;padding-left:3rem;background:var(--head);border-top:1px solid var(--grid);overflow-x:auto;} .ds-tabs a{display:flex;align-items:center;padding:0 1.1rem;white-space:nowrap;font-size:0.875rem;font-weight:600;color:var(--muted);text-decoration:none;border-right:1px solid var(--grid);} .ds-tabs a:hover{color:var(--ink);background:var(--cell);} .ds-tabs a[aria-current=\"page\"]{background:var(--cell);color:var(--deep);font-weight:800;box-shadow:inset 0 -3px 0 var(--deep);}"
+    },
+    {
+      "name": "Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Static square tag listing a project's tools.",
+      "html": "<ul class=\"ds-tags\"><li>FastAPI</li><li>SQLite</li><li>Azure</li></ul>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} .ds-tags{display:flex;flex-wrap:wrap;gap:0.35rem;margin:0;padding:0;list-style:none;} .ds-tags li{font-size:0.8125rem;font-weight:600;padding:0.15rem 0.5rem;border:1px solid var(--grid);background:var(--ground);}"
+    },
+    {
+      "name": "Link",
+      "kind": "custom",
+      "refersTo": "cell",
+      "description": "Ledger-green underlined link; underline thickens on hover.",
+      "html": "<p class=\"ds-p\">Read the <a class=\"ds-a\" href=\"#\">case study</a>.</p>",
+      "css": ":host{--ground:#f6f7f5;--cell:#ffffff;--head:#eceeeb;--ink:#111412;--muted:#4a524c;--grid:#d5dad5;--select:#c8f23a;--deep:#0d5c3d;--ease:cubic-bezier(0.16,1,0.3,1);font-family:Archivo,system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink);} :focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--select);} .ds-p{margin:0;} .ds-a{color:var(--deep);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:0.2em;} .ds-a:hover{text-decoration-thickness:2px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Workbook",
+    "overview": "The site is an analyst's workbook, built as a designed object. Every page is a sheet. A near-black title bar holds the name and the contact tools. A formula bar under it shows the active cell's reference and formula. Below that is a column-letter strip (A to L), a numbered row gutter, and rows of white cells separated by 1px grey hairlines. Sheet tabs stay fixed at the bottom of the viewport. The spreadsheet is the grammar, not a decoration: cells carry content, row numbers count real rows, and the formula bar reports real sources and computed values.\n\nThe density is moderate and even. Cells are generously padded, but nothing floats. All content sits inside a ruled cell. The palette is almost entirely cool neutrals. One lime selection fill is the loud colour, and it always means \"selected\". Deep green does the quieter work of links, the active tab, and comment markers. Archivo is the only typeface. It runs heavy and slightly widened at poster scale for the name, and plain at body sizes, with tabular numerals wherever figures appear.\n\nThe world rejects the usual portfolio of a hero with rounded cards. There are no soft corners anywhere and no floating surfaces.",
+    "keyCharacteristics": [
+      "Square corners everywhere (0 radius, enforced globally).",
+      "1px grey hairlines are the only dividers; there are no gaps between cells.",
+      "One lime selection band per sheet; lime also marks hover on controls.",
+      "Deep green for links, the active tab, and sourced-cell triangles.",
+      "One authored motion: the selection outline gliding to the active cell.",
+      "Archivo variable font, self-hosted, with tabular numerals on by default."
+    ],
+    "rules": [
+      {
+        "name": "The One Selection Rule",
+        "body": "Lime means selection. A sheet carries at most one selected row, and lime appears nowhere else at rest. It shows up on hover and focus, but never as decoration, as a background tint, or as a text colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Green Is Reference Rule",
+        "body": "Ledger green marks things that point somewhere else: links, the current tab, and sourced cells. Don't use it for headings or as a resting fill. Its only fill is the primary button's hover state.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Everywhere Rule",
+        "body": "`font-variant-numeric: tabular-nums` is set on the body, so every figure (dates, months, GPA, row numbers) lines up in columns. Don't turn it off locally.",
+        "section": "typography"
+      },
+      {
+        "name": "The Wide Means Identity Rule",
+        "body": "Archivo's 112% width is reserved for the name (the display name and the title-bar brand) and the `#REF!` error token. All other text stays at normal width.",
+        "section": "typography"
+      },
+      {
+        "name": "The No Gaps Rule",
+        "body": "Cells touch. Separation comes from 1px hairlines, never from margins, gaps, or whitespace between boxes.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Sheet Rule",
+        "body": "Nothing floats above the sheet. Don't add blurred or offset shadows. The only box-shadows are the focus halo and the tab underline.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do put every piece of content inside a ruled cell on the 12-column row grid, with spans of 2, 3, 4, 6, 8, 9, or 12.",
+      "Do fill unused spans with blank cells so the grid still reads.",
+      "Do give a cell a formula (a source, a computed value, or a target) when the fact has one, and mark sourced facts with the green comment triangle.",
+      "Do keep figures tabular and right-align numeric table columns. Close sums with the 2px ink total rule.",
+      "Do use the ink block for the single most important action in a cell, and the white outlined block for the rest.",
+      "Do cap reading text at 60 to 66ch inside wide cells."
+    ],
+    "donts": [
+      "Don't round any corner. The global reset is 0 and stays 0.",
+      "Don't use lime for anything except selection, hover, and focus, and don't put more than one selected row on a sheet.",
+      "Don't add blurred or offset drop shadows, or float cards with gaps between them.",
+      "Don't add a second typeface, or use Archivo's widened 112% width outside the name and the `#REF!` token.",
+      "Don't add motion beyond the selection outline's glide and the 120ms button colour change.",
+      "Don't put information only in the formula bar. It is aria-hidden, so the same text must also exist in the cell."
+    ]
+  }
+}

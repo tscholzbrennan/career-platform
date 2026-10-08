@@ -3,24 +3,27 @@
 {% block title %}Projects{% endblock %}
 
 {% block content %}
-<section class="section container">
-  <h1>Projects</h1>
-  {% if not projects %}
-  <p>Project write-ups are being updated. In the meantime, my code is on <a href="{{ profile.contact_links.github }}">GitHub</a>.</p>
-  {% endif %}
-  <div class="card-grid">
-    {% for project in projects %}
-    <article class="card">
-      <h2>{{ project.title }}</h2>
-      <p>{{ project.summary }}</p>
-      <div class="tag-row">
-        {% for tag in project.tags %}
-        <span class="tag">{{ tag }}</span>
-        {% endfor %}
-      </div>
-      <a href="/projects/{{ project.slug }}">View project</a>
-    </article>
-    {% endfor %}
+<div class="r">
+  <div class="c s12 name-cell"><h1>Projects</h1></div>
+</div>
+{% if not projects %}
+<div class="r">
+  <div class="c s12 empty">
+    <p>Project write-ups are being updated. In the meantime, my code is on <a href="{{ profile.contact_links.github }}">GitHub</a>.</p>
   </div>
-</section>
+</div>
+{% endif %}
+{% for pair in projects | batch(2) %}
+<div class="r">
+  {% for project in pair %}
+  <article class="c s6">
+    <h2>{{ project.title }}</h2>
+    <p>{{ project.summary }}</p>
+    {% if project.tags %}<ul class="tags">{% for tag in project.tags %}<li>{{ tag }}</li>{% endfor %}</ul>{% endif %}
+    <p><a href="/projects/{{ project.slug }}">View project</a></p>
+  </article>
+  {% endfor %}
+  {% if pair|length == 1 %}<div class="c s6 blank"></div>{% endif %}
+</div>
+{% endfor %}
 {% endblock %}

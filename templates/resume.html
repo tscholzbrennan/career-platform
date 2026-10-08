@@ -3,47 +3,50 @@
 {% block title %}Resume{% endblock %}
 
 {% block content %}
-<section class="section container narrow">
-  <h1>Resume</h1>
-  <div class="cta-row">
+{% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
+{% set activities = experiences | selectattr('category', 'equalto', 'activity') | list %}
+<div class="r">
+  <div class="c s12 name-cell"><h1>Resume</h1></div>
+</div>
+<div class="r">
+  <div class="c s12 btn-row">
     {% if profile.resume_url and profile.resume_url != '/resume' %}
-    <a class="button primary" href="{{ profile.resume_url }}" download>Download resume</a>
+    <a class="btn primary" href="{{ profile.resume_url }}" download>Download resume</a>
     {% endif %}
-    <a class="button secondary" href="/contact">Contact me</a>
+    <a class="btn" href="/contact">Contact me</a>
   </div>
+</div>
 
-  {% if education %}
-  <h2>Education</h2>
-  {% for school in education %}
-  <div class="resume-entry">
-    <strong>{{ school.institution }}</strong>
-    <span>{{ school.degree }}{% if school.field_of_study %}, {{ school.field_of_study }}{% endif %}{% if school.dates %} · {{ school.dates }}{% endif %}</span>
-    {% if school.details %}<span>{{ school.details }}</span>{% endif %}
+{% if education %}
+<div class="r"><div class="c s12 head-cell"><h2>Education</h2></div></div>
+{% for school in education %}
+<div class="r">
+  <div class="c s4 who"><strong>{{ school.institution }}</strong><span>{{ school.dates or '' }}</span></div>
+  <div class="c s8">
+    <p>{{ school.degree }}{% if school.field_of_study %}, {{ school.field_of_study }}{% endif %}</p>
+    {% if school.details %}<p>{{ school.details }}</p>{% endif %}
   </div>
-  {% endfor %}
-  {% endif %}
+</div>
+{% endfor %}
+{% endif %}
 
-  {% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
-  {% set activities = experiences | selectattr('category', 'equalto', 'activity') | list %}
-  {% for heading, items in [('Experience', work), ('Leadership & activities', activities)] if items %}
-  <h2>{{ heading }}</h2>
-  {% for item in items %}
-  <div class="resume-entry">
-    <strong>{{ item.role_title }}</strong>
-    <span>{{ item.company_name }} · {{ item.start_date }} – {{ item.end_date or 'Present' }}</span>
-  </div>
-  {% endfor %}
-  {% endfor %}
-  {% if experiences %}<p><a href="/experience">Full details on the Experience page</a></p>{% endif %}
+{% for heading, items in [('Experience', work), ('Leadership & activities', activities)] if items %}
+<div class="r"><div class="c s12 head-cell"><h2>{{ heading }}</h2>{% if loop.first %}<a href="/experience">Full details</a>{% endif %}</div></div>
+{% for item in items %}
+<div class="r">
+  <div class="c s4 who"><strong>{{ item.role_title }}</strong><span>{{ item.start_date }} – {{ item.end_date or 'Present' }}</span></div>
+  <div class="c s8"><p>{{ item.company_name }}{% if item.location %} · {{ item.location }}{% endif %}</p></div>
+</div>
+{% endfor %}
+{% endfor %}
 
-  {% if skills %}
-  <h2>Skills</h2>
-  <dl class="skills">
-    {% for category, names in skills.items() %}
-    <dt>{{ category }}</dt>
-    <dd>{{ names | join(', ') }}</dd>
-    {% endfor %}
-  </dl>
-  {% endif %}
-</section>
+{% if skills %}
+<div class="r"><div class="c s12 head-cell"><h2>Skills</h2></div></div>
+{% for category, names in skills.items() %}
+<div class="r">
+  <div class="c s4"><strong>{{ category }}</strong></div>
+  <div class="c s8">{{ names | join(', ') }}</div>
+</div>
+{% endfor %}
+{% endif %}
 {% endblock %}

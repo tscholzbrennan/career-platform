@@ -3,12 +3,27 @@
 {% block title %}Contact{% endblock %}
 
 {% block content %}
-<section class="section container narrow">
-  <h1>Let’s connect</h1>
-  <ul class="contact-list">
-    <li>Email: <a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a></li>
-    <li>LinkedIn: <a href="{{ profile.contact_links.linkedin }}">{{ profile.contact_links.linkedin }}</a></li>
-    <li>GitHub: <a href="{{ profile.contact_links.github }}">{{ profile.contact_links.github }}</a></li>
-  </ul>
-</section>
+<div class="r">
+  <div class="c s12 name-cell"><h1>Let’s connect</h1></div>
+</div>
+<div class="r">
+  <div class="c s8 prose"><p>{{ profile.seeking or profile.headline }} The fastest way to reach me is email.</p></div>
+  <div class="c s4 actions"><a class="btn primary" href="mailto:{{ profile.contact_links.email }}">Email me</a></div>
+</div>
+{% for label, href, text in [
+  ('Email', 'mailto:' ~ profile.contact_links.email, profile.contact_links.email),
+  ('LinkedIn', profile.contact_links.linkedin, profile.contact_links.linkedin),
+  ('GitHub', profile.contact_links.github, profile.contact_links.github),
+] if href and text %}
+<div class="r">
+  <div class="c s3"><strong>{{ label }}</strong></div>
+  <div class="c s9"><a href="{{ href }}">{{ text | replace('https://', '') }}</a></div>
+</div>
+{% endfor %}
+{% if profile.location %}
+<div class="r">
+  <div class="c s3"><strong>Location</strong></div>
+  <div class="c s9">{{ profile.location }}</div>
+</div>
+{% endif %}
 {% endblock %}

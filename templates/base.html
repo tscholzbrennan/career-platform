@@ -1,3 +1,6 @@
+{% set person = profile.full_name or profile.headline %}
+{% set has_resume = profile.resume_url and profile.resume_url != '/resume' %}
+{% set path = request.url.path %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -5,35 +8,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{% block page_title %}{% block title %}{% endblock %} · {{ profile.full_name or profile.headline }}{% endblock %}</title>
     <meta name="description" content="{{ profile.summary }}" />
+    <meta name="theme-color" content="#111412" />
+    <link rel="preload" href="/static/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/static/css/site.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="container nav-wrap">
-        <a class="brand" href="/">{{ profile.full_name or profile.headline }}</a>
-        <nav class="site-nav">
-          <a href="/about">About</a>
-          <a href="/experience">Experience</a>
-          <a href="/projects">Projects</a>
-          <a href="/resume">Resume</a>
-          <a href="/contact">Contact</a>
-        </nav>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="titlebar">
+      <a class="brand" href="/">{{ person }}</a>
+      <div class="tools">
+        <a class="tool" href="mailto:{{ profile.contact_links.email }}">Email</a>
+        {% if has_resume %}<a class="tool" href="{{ profile.resume_url }}" download>Resume PDF</a>{% endif %}
+        {% if profile.contact_links.linkedin %}<a class="tool" href="{{ profile.contact_links.linkedin }}">LinkedIn</a>{% endif %}
       </div>
     </header>
 
-    <main>
+    <div class="formula-bar" aria-hidden="true">
+      <span></span>
+      <span class="namebox" data-namebox>A1</span>
+      <span class="fx">fx</span>
+      <span class="formula"><span class="formula-text" data-formula-out>="{{ person }}"</span></span>
+    </div>
+
+    <main id="main" class="sheet">
+      <div class="colhead" aria-hidden="true">
+        <span></span>{% for letter in "ABCDEFGHIJKL" %}<span>{{ letter }}</span>{% endfor %}
+      </div>
       {% block content %}{% endblock %}
     </main>
 
-    <footer class="site-footer">
-      <div class="container footer-wrap">
-        <p>© 2026 {{ profile.full_name or profile.headline }}</p>
-        <div class="footer-links">
-          <a href="{{ profile.contact_links.github }}">GitHub</a>
-          <a href="{{ profile.contact_links.linkedin }}">LinkedIn</a>
-          <a href="mailto:{{ profile.contact_links.email }}">Email</a>
-        </div>
+    <footer class="statusbar">
+      <p>© 2026 {{ person }}</p>
+      <div class="footer-links">
+        <a href="{{ profile.contact_links.github }}">GitHub</a>
+        <a href="{{ profile.contact_links.linkedin }}">LinkedIn</a>
+        <a href="mailto:{{ profile.contact_links.email }}">Email</a>
       </div>
     </footer>
+
+    <nav class="tabs" aria-label="Pages">
+      {% for href, label in [('/', 'Home'), ('/about', 'About'), ('/experience', 'Experience'), ('/projects', 'Projects'), ('/resume', 'Resume'), ('/contact', 'Contact')] %}
+      <a href="{{ href }}"{% if path == href or (href != '/' and path.startswith(href)) %} aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+
+    <script src="/static/js/workbook.js" defer></script>
   </body>
 </html>
