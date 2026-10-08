@@ -509,7 +509,7 @@ git push -u origin feat/railway-postgres
 gh pr create --title "Move to Railway + PostgreSQL" --body "Implements docs/superpowers/plans/2026-10-08-railway-postgres-migration.md"
 ```
 
-- [ ] **Step 4: Pull the live database off the VM.** Content freeze starts here.
+- [x] **Step 4: Pull the live database off the VM.** Content freeze starts here.
 
 ```bash
 SCRATCH=/private/tmp/claude-501/-Users-tristanbrennan-Desktop-GITHUB-career-platform/scratchpad   # or any non-repo folder
@@ -523,7 +523,7 @@ for t in profiles experiences projects skills education media fallback_profile_s
 
 `.backup` takes a consistent copy even while the app has the file open. Check that the counts match the table at the top of this plan. If they differ, the VM has newer content, which is fine: it's the source of truth.
 
-- [ ] **Step 5: Check the Railway Postgres is empty** (this is Task 0, Step 4).
+- [x] **Step 5: Check the Railway Postgres is empty** (this is Task 0, Step 4).
 
 ```bash
 PUB=$(railway variables --service <Postgres> --kv | sed -n 's/^DATABASE_PUBLIC_URL=//p')
@@ -535,13 +535,15 @@ print(inspect(create_engine(resolve_database_url(sys.argv[1], '', False))).get_t
 
 Expected: `[]`. If tables exist, an earlier deploy created them (and probably seeded placeholders). Note that here, and use `--replace` in Step 6 after confirming with the user.
 
-- [ ] **Step 6: Copy.**
+- [x] **Step 6: Copy.**
 
 ```bash
 .venv/bin/python -m app.copy_database --source "sqlite:///$SCRATCH/live.db" --target "$PUB"
 ```
 
 Expected: the same counts as Step 4. The command checks the counts itself and raises on any mismatch.
+
+> **Done 2026-10-08 (no Railway CLI; the user put `DATABASE_PUBLIC_URL` in `.env` as `RAILWAY_DATABASE_URL`):** Railway Postgres 18.6 had no tables beforehand. Copied from the verified VM backup `~/career_platform.db.bak-20261008T214815Z` (fingerprint `19f1b57de9488406`, the same as the live DB). Then compared it against a fresh read-only snapshot of the **live** VM DB (same fingerprint), table by table: the same 7 tables, the same columns, and identical row counts and values (education 1, experiences 3, fallback_profile_snapshots 0, media 0, profiles 1, projects 1, skills 12; 114 values checked). Every ID counter on Railway is at max id + 1. A deliberately altered local copy was flagged as DIFFERENT, so the check works. Content freeze is now in effect until DNS cutover.
 
 **Undo:** `--replace` with a fresh copy fixes bad data. To empty Postgres entirely: `railway connect <Postgres>`, then `DROP SCHEMA public CASCADE; CREATE SCHEMA public;`.
 
