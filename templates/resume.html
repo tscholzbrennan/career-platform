@@ -4,17 +4,46 @@
 
 {% block content %}
 <section class="section container narrow">
-  <p class="eyebrow">Resume</p>
-  <h1>Professional summary</h1>
-  <p>{{ profile.summary }}</p>
-  <ul>
-    {% for item in experiences %}
-    <li><strong>{{ item.role_title }}</strong> at {{ item.company_name }}</li>
-    {% endfor %}
-  </ul>
+  <h1>Resume</h1>
   <div class="cta-row">
-    <a class="button primary" href="{{ profile.resume_url or '/resume' }}">Download resume</a>
+    {% if profile.resume_url and profile.resume_url != '/resume' %}
+    <a class="button primary" href="{{ profile.resume_url }}" download>Download resume</a>
+    {% endif %}
     <a class="button secondary" href="/contact">Contact me</a>
   </div>
+
+  {% if education %}
+  <h2>Education</h2>
+  {% for school in education %}
+  <div class="resume-entry">
+    <strong>{{ school.institution }}</strong>
+    <span>{{ school.degree }}{% if school.field_of_study %}, {{ school.field_of_study }}{% endif %}{% if school.dates %} · {{ school.dates }}{% endif %}</span>
+    {% if school.details %}<span>{{ school.details }}</span>{% endif %}
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
+  {% set activities = experiences | selectattr('category', 'equalto', 'activity') | list %}
+  {% for heading, items in [('Experience', work), ('Leadership & activities', activities)] if items %}
+  <h2>{{ heading }}</h2>
+  {% for item in items %}
+  <div class="resume-entry">
+    <strong>{{ item.role_title }}</strong>
+    <span>{{ item.company_name }} · {{ item.start_date }} – {{ item.end_date or 'Present' }}</span>
+  </div>
+  {% endfor %}
+  {% endfor %}
+  {% if experiences %}<p><a href="/experience">Full details on the Experience page</a></p>{% endif %}
+
+  {% if skills %}
+  <h2>Skills</h2>
+  <dl class="skills">
+    {% for category, names in skills.items() %}
+    <dt>{{ category }}</dt>
+    <dd>{{ names | join(', ') }}</dd>
+    {% endfor %}
+  </dl>
+  {% endif %}
 </section>
 {% endblock %}

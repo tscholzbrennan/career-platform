@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
 
+from app.config import settings
 from app.db import SessionLocal
-from app.models import Profile
+from app.models import Profile, Project
+from app.services.profile_service import _profile_to_dict
 
 
 def update_profile_summary(headline: str, summary: str):
@@ -22,30 +24,15 @@ def update_profile_summary(headline: str, summary: str):
             profile.summary = summary
         db.commit()
 
-        data = {
-            "headline": profile.headline,
-            "summary": profile.summary,
-            "location": profile.location,
-            "email": profile.email,
-            "linkedin_url": profile.linkedin_url,
-            "github_url": profile.github_url,
-            "resume_url": profile.resume_url,
-            "profile_image": profile.profile_image,
-            "focus_area": profile.focus_area,
-            "contact_links": {
-                "email": profile.email,
-                "linkedin": profile.linkedin_url,
-                "github": profile.github_url,
-            },
-            "featured_projects": [],
-            "degraded_mode": True,
-            "source": "fallback",
-        }
+        projects = db.query(Project).filter(Project.featured == 1).order_by(Project.id).all()
+        data = _profile_to_dict(profile, projects)
+        data["degraded_mode"] = True
+        data["source"] = "fallback"
 
-        path = Path('data/fallback-profile.json')
+        path = Path(settings.FALLBACK_PROFILE_PATH)
         path.parent.mkdir(exist_ok=True)
         with path.open('w', encoding='utf-8') as handle:
-            json.dump(data, handle, indent=2)
+            json.dump(data, handle, indent=2, ensure_ascii=False)
 
         return profile
     finally:

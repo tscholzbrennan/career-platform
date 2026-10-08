@@ -3,13 +3,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{% block title %}Career Platform{% endblock %}</title>
+    <title>{% block page_title %}{% block title %}{% endblock %} · {{ profile.full_name or profile.headline }}{% endblock %}</title>
+    <meta name="description" content="{{ profile.summary }}" />
     <link rel="stylesheet" href="/static/css/site.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container nav-wrap">
-        <a class="brand" href="/">{{ profile.headline }}</a>
+        <a class="brand" href="/">{{ profile.full_name or profile.headline }}</a>
         <nav class="site-nav">
           <a href="/about">About</a>
           <a href="/experience">Experience</a>
@@ -26,7 +27,7 @@
 
     <footer class="site-footer">
       <div class="container footer-wrap">
-        <p>© 2026 {{ profile.headline }}</p>
+        <p>© 2026 {{ profile.full_name or profile.headline }}</p>
         <div class="footer-links">
           <a href="{{ profile.contact_links.github }}">GitHub</a>
           <a href="{{ profile.contact_links.linkedin }}">LinkedIn</a>

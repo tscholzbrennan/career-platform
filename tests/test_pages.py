@@ -7,7 +7,7 @@ def test_homepage_renders_headline():
     client = TestClient(app)
     response = client.get('/')
     assert response.status_code == 200
-    assert 'headline' in response.text.lower() or 'profile' in response.text.lower()
+    assert 'Business Analytics student' in response.text
 
 
 def test_project_pages_load():

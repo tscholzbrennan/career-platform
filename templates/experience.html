@@ -2,26 +2,44 @@
 
 {% block title %}Experience{% endblock %}
 
-{% block content %}
-<section class="section container">
-  <p class="eyebrow">Experience</p>
-  <h1>Career highlights</h1>
-  <div class="timeline">
-    {% for item in experiences %}
-    <article class="timeline-item card">
-      <div class="timeline-meta">
-        <strong>{{ item.role_title }}</strong>
-        <span>{{ item.company_name }}</span>
-        <span>{{ item.start_date }} - {{ item.end_date or 'Present' }}</span>
-      </div>
-      <p>{{ item.summary }}</p>
-      <ul>
-        {% for bullet in item.bullet_points %}
-        <li>{{ bullet }}</li>
-        {% endfor %}
-      </ul>
-    </article>
-    {% endfor %}
+{% macro experience_card(item) %}
+<article class="timeline-item card">
+  <div class="timeline-meta">
+    <strong>{{ item.role_title }}</strong>
+    <span>{{ item.company_name }}{% if item.location %} · {{ item.location }}{% endif %}</span>
+    <span class="dates">{{ item.start_date }} – {{ item.end_date or 'Present' }}</span>
   </div>
+  {% if item.bullet_points %}
+  <ul>
+    {% for bullet in item.bullet_points %}
+    <li>{{ bullet }}</li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>{{ item.summary }}</p>
+  {% endif %}
+</article>
+{% endmacro %}
+
+{% block content %}
+{% set work = experiences | rejectattr('category', 'equalto', 'activity') | list %}
+{% set activities = experiences | selectattr('category', 'equalto', 'activity') | list %}
+<section class="section container">
+  <h1>Experience</h1>
+  {% if not experiences %}
+  <p>My experience details are being updated. {% if profile.resume_url and profile.resume_url != '/resume' %}You can <a href="{{ profile.resume_url }}" download>download my resume</a> for the full picture.{% else %}Please <a href="/contact">get in touch</a> for my resume.{% endif %}</p>
+  {% endif %}
+  {% if work %}
+  <h2>Work experience</h2>
+  <div class="timeline">
+    {% for item in work %}{{ experience_card(item) }}{% endfor %}
+  </div>
+  {% endif %}
+  {% if activities %}
+  <h2>Leadership &amp; activities</h2>
+  <div class="timeline">
+    {% for item in activities %}{{ experience_card(item) }}{% endfor %}
+  </div>
+  {% endif %}
 </section>
 {% endblock %}

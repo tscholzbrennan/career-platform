@@ -1,33 +1,34 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block page_title %}{{ profile.full_name or profile.headline }} · {{ profile.focus_area }}{% endblock %}
 
 {% block content %}
 <section class="hero">
   <div class="container hero-layout">
     <div>
-      {% if profile.degraded_mode %}
-      <div class="status-banner">Profile is currently showing the saved fallback snapshot.</div>
-      {% endif %}
-      <p class="eyebrow">{{ profile.focus_area }}</p>
-      <h1>{{ profile.headline }}</h1>
+      <h1>{{ profile.full_name or profile.headline }}</h1>
+      {% if profile.full_name %}<p class="role">{{ profile.headline }}</p>{% endif %}
+      {% if profile.seeking %}<p class="seeking">{{ profile.seeking }}</p>{% endif %}
       <p class="lede">{{ profile.summary }}</p>
       <div class="cta-row">
-        <a class="button primary" href="/projects">View Projects</a>
-        <a class="button secondary" href="/contact">Connect</a>
+        <a class="button primary" href="/contact">Get in touch</a>
+        <a class="button secondary" href="/resume">View resume</a>
       </div>
     </div>
     <div class="hero-card">
-      <h2>Quick profile</h2>
-      <ul>
-        <li>Location: {{ profile.location }}</li>
-        <li>Email: {{ profile.contact_links.email }}</li>
-        <li>Focus: {{ profile.focus_area }}</li>
+      <h2>At a glance</h2>
+      <ul class="glance">
+        {% for item in profile.highlights or [] %}
+        <li>{{ item }}</li>
+        {% endfor %}
+        <li>{{ profile.location }}</li>
+        <li><a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a></li>
       </ul>
     </div>
   </div>
 </section>
 
+{% if projects %}
 <section class="section container">
   <div class="section-head">
     <h2>Featured projects</h2>
@@ -38,9 +39,10 @@
     <article class="card">
       <h3>{{ project.title }}</h3>
       <p>{{ project.summary }}</p>
-      <a href="/projects/{{ project.slug }}">Read case study</a>
+      <a href="/projects/{{ project.slug }}">Read the case study</a>
     </article>
     {% endfor %}
   </div>
 </section>
+{% endif %}
 {% endblock %}

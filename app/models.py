@@ -6,6 +6,7 @@ class Profile(Base):
     __tablename__ = "profiles"
 
     id = Column(Integer, primary_key=True, index=True)
+    full_name = Column(String(255), nullable=True)
     headline = Column(String(255), nullable=False)
     summary = Column(Text, nullable=False)
     location = Column(String(255), default="Remote")
@@ -15,6 +16,9 @@ class Profile(Base):
     resume_url = Column(String(255), nullable=True)
     profile_image = Column(String(255), nullable=True)
     focus_area = Column(String(255), default="Data & AI")
+    seeking = Column(String(255), nullable=True)
+    about = Column(Text, nullable=True)
+    highlights = Column(JSON, default=list)
 
 
 class Experience(Base):
@@ -30,6 +34,7 @@ class Experience(Base):
     bullet_points = Column(JSON, default=list)
     impact_notes = Column(JSON, default=list)
     skills = Column(JSON, default=list)
+    category = Column(String(50), default="work")
 
 
 class Project(Base):

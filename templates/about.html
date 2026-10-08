@@ -3,10 +3,18 @@
 {% block title %}About{% endblock %}
 
 {% block content %}
-<section class="section container narrow">
-  <p class="eyebrow">About</p>
-  <h1>Helping teams turn data into decisions.</h1>
-  <p>{{ profile.summary }}</p>
-  <p>I work at the intersection of experimentation, data storytelling, and product thinking. My goal is to build experiences that make information actionable and easy for teams to trust.</p>
+<section class="section container narrow prose">
+  <h1>About</h1>
+  {% if profile.about %}
+    {% for paragraph in profile.about.split('\n\n') %}
+    <p>{{ paragraph }}</p>
+    {% endfor %}
+  {% else %}
+    <p>{{ profile.summary }}</p>
+  {% endif %}
+  <div class="cta-row">
+    <a class="button primary" href="/contact">Get in touch</a>
+    <a class="button secondary" href="/experience">See my experience</a>
+  </div>
 </section>
 {% endblock %}

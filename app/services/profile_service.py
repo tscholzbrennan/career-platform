@@ -9,6 +9,7 @@ from app.services.fallback_profile import load_fallback_profile
 
 def _profile_to_dict(profile: Profile, projects: List[Project]) -> Dict[str, Any]:
     return {
+        "full_name": profile.full_name,
         "headline": profile.headline,
         "summary": profile.summary,
         "location": profile.location,
@@ -18,6 +19,9 @@ def _profile_to_dict(profile: Profile, projects: List[Project]) -> Dict[str, Any
         "resume_url": profile.resume_url,
         "profile_image": profile.profile_image,
         "focus_area": profile.focus_area,
+        "seeking": profile.seeking,
+        "about": profile.about,
+        "highlights": profile.highlights or [],
         "contact_links": {
             "email": profile.email,
             "linkedin": profile.linkedin_url,
