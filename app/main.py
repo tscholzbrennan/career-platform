@@ -118,6 +118,12 @@ async def contact(request: Request):
     return templates.TemplateResponse("contact.html", {"request": request, "profile": profile})
 
 
+@app.get("/privacy", response_class=HTMLResponse)
+async def privacy(request: Request):
+    profile = get_public_profile()
+    return templates.TemplateResponse("privacy.html", {"request": request, "profile": profile})
+
+
 @app.get("/api/profile")
 async def api_profile():
     return get_public_profile()

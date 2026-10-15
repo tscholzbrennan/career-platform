@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy{% endblock %}
+
+{% block content %}
+<div class="r">
+  <div class="c s12 name-cell"><h1>Privacy</h1></div>
+</div>
+<div class="r">
+  <div class="c s8 prose">
+    <p>This site has no forms, no accounts and no ads. It uses Google Analytics to count page views and clicks on links to other sites, and my hosting provider keeps a basic log of each request. This page explains what that means for you.</p>
+    <p>Last updated: [DATE GA IS INSTALLED]</p>
+  </div>
+  <div class="c s4 blank"></div>
+</div>
+
+<div class="r"><div class="c s12 head-cell"><h2>What’s collected</h2></div></div>
+<div class="r">
+  <div class="c s3"><strong>Google Analytics</strong></div>
+  <div class="c s9 prose">
+    <p>Each time you open a page, your browser sends Google the page address and title, the page you came from, your browser and device type, screen size and language, and a random ID stored in a cookie so repeat visits can be counted. Google uses your IP address to estimate your city, region and country. Google says Google Analytics 4 doesn’t log or store IP addresses. When you click a link to another site, such as LinkedIn or GitHub, the address of that link is also sent.</p>
+  </div>
+</div>
+<div class="r">
+  <div class="c s3"><strong>Server logs</strong></div>
+  <div class="c s9 prose">
+    <p>The site runs on Railway. For every request, the server writes a log line with your IP address, the time, the page requested and whether it loaded. I use these logs to fix errors and keep the site running.</p>
+  </div>
+</div>
+<div class="r">
+  <div class="c s3"><strong>Email</strong></div>
+  <div class="c s9 prose">
+    <p>If you email me, I receive your address and whatever you write, and so does my email provider. Nothing on this site sends email for you. The email links just open your own mail app.</p>
+  </div>
+</div>
+
+<div class="r"><div class="c s12 head-cell"><h2>Cookies</h2></div></div>
+<div class="r">
+  <div class="c s12 table-cell">
+    <table class="xl">
+      <thead><tr><th>Cookie</th><th>Set by</th><th>Purpose</th><th>Lasts</th></tr></thead>
+      <tbody>
+        <tr><td><code>_ga</code></td><td>Google Analytics</td><td>A random ID that tells one browser’s visits apart from another’s</td><td>2 years</td></tr>
+        <tr><td><code>_ga_T6KK7PB43N</code></td><td>Google Analytics</td><td>Keeps track of the current visit</td><td>2 years</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="r">
+  <div class="c s8 prose"><p>The site sets no other cookies.</p></div>
+  <div class="c s4 blank"></div>
+</div>
+
+<div class="r"><div class="c s12 head-cell"><h2>Why</h2></div></div>
+<div class="r">
+  <div class="c s8 prose">
+    <p>I want to know which pages people read, how they found the site and which links they follow, so I can improve it. I don’t use this data for advertising and I don’t sell it.</p>
+  </div>
+  <div class="c s4 blank"></div>
+</div>
+
+<div class="r"><div class="c s12 head-cell"><h2>Who receives it</h2></div></div>
+<div class="r">
+  <div class="c s3"><strong>Google</strong></div>
+  <div class="c s9 prose"><p>Receives the analytics data. Google keeps it for [2 OR 14] months, then deletes it. Google’s own use is covered by <a href="https://policies.google.com/technologies/partner-sites">how Google uses information from sites that use its services</a>.</p></div>
+</div>
+<div class="r">
+  <div class="c s3"><strong>Railway</strong></div>
+  <div class="c s9 prose"><p>Hosts the site and stores the server logs for [RAILWAY LOG RETENTION].</p></div>
+</div>
+<div class="r">
+  <div class="c s3"><strong>Me</strong></div>
+  <div class="c s9 prose"><p>I can see the analytics reports and the server logs. [CONFIRM NOBODY ELSE HAS ACCESS TO THE GA PROPERTY OR RAILWAY PROJECT.]</p></div>
+</div>
+
+<div class="r"><div class="c s12 head-cell"><h2>Your choices</h2></div></div>
+<div class="r">
+  <div class="c s8 prose">
+    <p>There’s no cookie banner on this site, and it doesn’t respond to Do Not Track or Global Privacy Control signals. You can still stop the analytics yourself:</p>
+    <ul class="bullets">
+      <li>Block cookies for this site in your browser settings, or use a private window.</li>
+      <li>Use a content blocker that blocks Google Analytics.</li>
+      <li>Install Google’s <a href="https://tools.google.com/dlpage/gaoptout">Google Analytics opt-out add-on</a>.</li>
+    </ul>
+    <p>Server logs are written for every visit, and you can’t turn them off. If you have questions about your data, email me at <a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a>.</p>
+  </div>
+  <div class="c s4 blank"></div>
+</div>
+{% endblock %}
