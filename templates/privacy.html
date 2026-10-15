@@ -8,7 +8,7 @@
 </div>
 <div class="r">
   <div class="c s8 prose">
-    <p>This site has no forms, no accounts and no ads. It uses Google Analytics to count page views and clicks on links to other sites, and my hosting provider keeps a basic log of each request. This page explains what that means for you.</p>
+    <p>This site has no forms, no accounts and no ads. If you allow it, Google Analytics counts page views and clicks on links to other sites. My hosting provider keeps a basic log of each request either way. This page explains what that means for you.</p>
     <p>Last updated: [DATE GA IS INSTALLED]</p>
   </div>
   <div class="c s4 blank"></div>
@@ -18,7 +18,7 @@
 <div class="r">
   <div class="c s3"><strong>Google Analytics</strong></div>
   <div class="c s9 prose">
-    <p>Each time you open a page, your browser sends Google the page address and title, the page you came from, your browser and device type, screen size and language, and a random ID stored in a cookie so repeat visits can be counted. Google uses your IP address to estimate your city, region and country. Google says Google Analytics 4 doesn’t log or store IP addresses. When you click a link to another site, such as LinkedIn or GitHub, the address of that link is also sent.</p>
+    <p>Only if you choose Allow. Until then, the Google Analytics code isn’t loaded and nothing is sent to Google. After you allow it, each time you open a page, your browser sends Google the page address and title, the page you came from, your browser and device type, screen size and language, and a random ID stored in a cookie so repeat visits can be counted. Google uses your IP address to estimate your city, region and country. Google says Google Analytics 4 doesn’t log or store IP addresses. When you click a link to another site, such as LinkedIn or GitHub, the address of that link is also sent.</p>
   </div>
 </div>
 <div class="r">
@@ -42,12 +42,13 @@
       <tbody>
         <tr><td><code>_ga</code></td><td>Google Analytics</td><td>A random ID that tells one browser’s visits apart from another’s</td><td>2 years</td></tr>
         <tr><td><code>_ga_T6KK7PB43N</code></td><td>Google Analytics</td><td>Keeps track of the current visit</td><td>2 years</td></tr>
+        <tr><td><code>analytics-consent</code></td><td>This site</td><td>Remembers whether you chose Allow or Decline. It’s kept in your browser’s local storage, not a cookie, and is never sent anywhere.</td><td>Until you clear your browser data</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 <div class="r">
-  <div class="c s8 prose"><p>The site sets no other cookies.</p></div>
+  <div class="c s8 prose"><p>The two Google Analytics cookies are only set after you choose Allow. The site sets no other cookies.</p></div>
   <div class="c s4 blank"></div>
 </div>
 
@@ -76,12 +77,18 @@
 <div class="r"><div class="c s12 head-cell"><h2>Your choices</h2></div></div>
 <div class="r">
   <div class="c s8 prose">
-    <p>There’s no cookie banner on this site, and it doesn’t respond to Do Not Track or Global Privacy Control signals. You can still stop the analytics yourself:</p>
-    <ul class="bullets">
-      <li>Block cookies for this site in your browser settings, or use a private window.</li>
-      <li>Use a content blocker that blocks Google Analytics.</li>
-      <li>Install Google’s <a href="https://tools.google.com/dlpage/gaoptout">Google Analytics opt-out add-on</a>.</li>
-    </ul>
+    <p>On your first visit, a banner asks whether I can use Google Analytics. Nothing is sent to Google unless you choose Allow. If your browser sends a Global Privacy Control signal, the site treats that as Decline and doesn’t ask. The site doesn’t respond to Do Not Track signals.</p>
+    <p>You can change your choice here at any time. If you switch to Decline, the site stops sending data and deletes its Google Analytics cookies from your browser, but it can’t remove data Google has already received.</p>
+    <p><strong>Your current choice:</strong> <span data-consent-status>Needs JavaScript to show</span></p>
+  </div>
+  <div class="c s4 btn-row">
+    <button type="button" class="btn primary" data-consent-choice="granted">Allow</button>
+    <button type="button" class="btn" data-consent-choice="denied">Decline</button>
+  </div>
+</div>
+<div class="r">
+  <div class="c s8 prose">
+    <p>If JavaScript is off, Google Analytics never loads. You can also block cookies for this site, use a content blocker, or install Google’s <a href="https://tools.google.com/dlpage/gaoptout">Google Analytics opt-out add-on</a>.</p>
     <p>Server logs are written for every visit, and you can’t turn them off. If you have questions about your data, email me at <a href="mailto:{{ profile.contact_links.email }}">{{ profile.contact_links.email }}</a>.</p>
   </div>
   <div class="c s4 blank"></div>

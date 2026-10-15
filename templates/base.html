@@ -54,6 +54,15 @@
       {% endfor %}
     </nav>
 
+    <div class="consent" data-consent role="region" aria-label="Analytics cookies" hidden>
+      <p>Can I use Google Analytics cookies to count visits and link clicks? Nothing is sent to Google unless you allow it. <a href="/privacy">Details</a></p>
+      <div class="btn-row">
+        <button type="button" class="btn primary" data-consent-choice="granted">Allow</button>
+        <button type="button" class="btn" data-consent-choice="denied">Decline</button>
+      </div>
+    </div>
+
     <script src="/static/js/workbook.js" defer></script>
+    <script src="/static/js/consent.js" defer></script>
   </body>
 </html>
