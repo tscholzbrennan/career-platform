@@ -2,6 +2,14 @@
 
 A recruiter-focused personal career website built with FastAPI, using PostgreSQL in production (Railway) and SQLite locally.
 
+## Design and plans
+
+- Spec: [`docs/superpowers/specs/2026-09-15-career-platform-resume-site-design.md`](docs/superpowers/specs/2026-09-15-career-platform-resume-site-design.md)
+- Plan: [Move to the Azure VM](docs/superpowers/plans/2026-09-24-azure-vm-migration.md) (2026-09-24)
+- Plan: [Operate the VM](docs/superpowers/plans/2026-10-01-operate-the-vm.md) (systemd, nginx, HTTPS; 2026-10-01)
+- Plan: [Move to Railway + PostgreSQL](docs/superpowers/plans/2026-10-08-railway-postgres-migration.md) (2026-10-08). There's no separate spec file for this move. The spec was the request in conversation, quoted at the top of the plan.
+- Project 1 submission index: [`docs/project-1-submission.md`](docs/project-1-submission.md)
+
 ## Local setup
 
 1. Create a virtual environment.
@@ -26,6 +34,38 @@ Production runs on Railway, built and started with the settings in `railway.json
 One-off data copy from SQLite into Postgres:
 `python -m app.copy_database --source sqlite:///career_platform.db --target "$DATABASE_PUBLIC_URL"`
 It refuses to write into a database that already has rows unless you pass `--replace`.
+
+### Who manages what: Azure VM vs Railway
+
+| | Azure VM (staging) | Railway (production) |
+|---|---|---|
+| OS | Me: Ubuntu 24.04, patched with `apt` | Railway: the container base image Railpack picks |
+| Python runtime | Me: system CPython 3.12.3 plus a `uv` venv | Railway: Railpack installs Python and the locked dependencies from `uv.lock`. I choose the versions |
+| Entry point | Me: systemd unit runs uvicorn on `127.0.0.1:8000`, behind nginx | Me: `startCommand` in `railway.json`. Railway runs it, healthchecks `/`, and restarts it on failure |
+| TLS | Me: Certbot + Let's Encrypt on nginx, renewed by `certbot.timer` | Railway: Let's Encrypt at Railway's edge, renewed automatically |
+| Code | Me: `git pull` on the VM, then restart the service | Me: push to `main`. Railway builds and deploys it |
+| Config | Me: `.env` file on the VM | Me: service variables in the Railway dashboard (`DATABASE_URL` references the Postgres service) |
+| Database software | Me: the SQLite library, nothing to run | Railway: managed PostgreSQL 18.6 |
+| Data | Me: one file on the VM's OS disk, backed up by hand | Me for the content. Railway stores it on the Postgres service |
+| DNS | Me: Cloudflare | Me: Cloudflare (unchanged) |
+
+Moving to Railway handed over the OS, the runtime install, TLS and the database server. I still own the code, the start command, the config values, the content and DNS.
+
+### Rollback to the Azure VM
+
+The VM's SQLite file stopped receiving changes at cutover (2026-10-08). Anything written to Railway Postgres since then isn't on the VM. A rollback therefore copies the data back first, then moves DNS:
+
+1. **Freeze edits** on the Railway database until the rollback is finished.
+2. **Back up Postgres:** `pg_dump "$RAILWAY_DATABASE_URL" > railway-$(date +%Y%m%d).sql`. Keep this file out of the repo.
+3. **Start the VM** (`az vm start -g RG-CAREER-PLATFORM -n vm-career-platform`) and back up its current database: `sqlite3 career_platform.db ".backup ~/career_platform.db.bak-$(date +%Y%m%dT%H%M%S)"`.
+4. **Copy Postgres into a fresh SQLite file** on the laptop. The copy command works in either direction, and a new file needs no `--replace`:
+   `python -m app.copy_database --source "$RAILWAY_DATABASE_URL" --target sqlite:///rollback.db`
+   It prints the row counts and stops if any table's count doesn't match.
+5. **Swap it in on the VM:** `scp` `rollback.db` over, `sudo systemctl stop career-platform`, move it to `~/career-platform/career_platform.db`, then `sudo systemctl start career-platform`.
+6. **Check on the VM** before DNS points there: `curl -s -H 'Host: tristaninfo.me' localhost:8000/api/profile` should show `"source": "database"` and the current email. Also check that `sudo certbot certificates` shows a valid certificate. The VM's certificate expires 2027-01-04 and only renews while the VM is running.
+7. **Move DNS** in Cloudflare: replace the apex CNAME to `aq2r9r5b.up.railway.app` with `A tristaninfo.me → 20.221.247.215`, DNS only. Then run `dig +short tristaninfo.me` and `curl -s https://tristaninfo.me/api/profile` again.
+
+To undo the rollback, put the CNAME back. If content changed on the VM in the meantime, copy SQLite → Postgres with `--replace` first.
 
 ## Azure VM (staging, now deallocated)
 

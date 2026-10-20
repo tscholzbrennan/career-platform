@@ -577,6 +577,13 @@ Expected: `database Tristan Scholz-Brennan Tscholzbrennan@gmail.com`, every path
 
 **Undo:** in the dashboard, Deployments → redeploy the previous deployment, or remove the service's domain. The live site is still on the VM, so visitors are unaffected.
 
+> **Recorded 2026-10-20 (after the fact):** Steps 1–4 and 6 were done by the user in the Railway dashboard on 2026-10-08, before the DNS cutover the same day, and the results weren't written down at the time. The `*.up.railway.app` domain check and the deploy logs weren't saved. What can be checked now, at 2026-10-20 16:32 PDT, against `https://tristaninfo.me` (the same service):
+> - `/api/profile` → `database Tristan Scholz-Brennan Tscholzbrennan@gmail.com`, `degraded_mode` false. So `DATABASE_URL` is set and the app reads Postgres, not a container SQLite file.
+> - `/`, `/about`, `/experience`, `/projects`, `/resume`, `/contact`, `/privacy` and the resume PDF → all `200`. Placeholder hits for `example.com` on `/` → `0`.
+> - The deploy source is `main` with auto-deploy on. A push to `main` was live about 50 s later (seen with `cb7c2d3` on 2026-10-15). The branch and auto-deploy setting are read from that behaviour, not from the dashboard.
+>
+> **Step 5 (seed didn't add rows):** only indirect evidence so far. `/projects` lists exactly 1 project (`Career Platform`), the same as the copy, and no seed placeholder appears on any page. `seed_data` only writes into empty tables, and every table was non-empty after the copy. A direct `select count(*)` on Railway still needs to be run; it's pending.
+
 ---
 
 ### Task 5: Move `tristaninfo.me` to Railway (Cloudflare DNS)
@@ -604,6 +611,14 @@ curl -s https://tristaninfo.me/api/profile | python3 -c "import json,sys; print(
 Expected: Railway IPs, `200`, a certificate issued for `tristaninfo.me` (Let's Encrypt via Railway), and `database`. Also confirm there's no request in the VM's nginx log after the TTL expires: `ssh … 'sudo tail -n 5 /var/log/nginx/access.log'`.
 
 **Undo:** in Cloudflare, delete the two CNAMEs and restore `A @ → 20.221.247.215` and `A www → 20.221.247.215`. The VM is untouched and still running, so the site is back within the TTL.
+
+> **Recorded 2026-10-20 (after the fact):** cut over on **2026-10-08**. Cloudflare shows the apex CNAME `tristaninfo.me → aq2r9r5b.up.railway.app` and the `_railway-verify` TXT record last modified at 22:18 and 22:19 UTC. Railway's certificate for `tristaninfo.me` dates from the same day. **Deviations:** only the apex was added as a Railway custom domain. `www` was left as the old `A 20.221.247.215`, so it stopped answering once the VM was deallocated. The professor OK'd leaving it (see `docs/evidence/https.md`). Steps 1 (lower TTL) and the VM nginx-log check weren't recorded.
+>
+> Post-cutover checks, 2026-10-20 16:32 PDT:
+> - `dig +short tristaninfo.me` → `69.46.46.105`, the same address as `aq2r9r5b.up.railway.app`, not `20.221.247.215`.
+> - `curl -s -D - https://tristaninfo.me/` → `HTTP/2 200`, with `server: railway-hikari` and `x-railway-edge: lax1`. A `HEAD` request (`curl -I`) gets `405`, because FastAPI's GET routes don't answer HEAD. That's expected and not an error.
+> - The certificate is `subject=CN=tristaninfo.me`, `issuer=C=US, O=Let's Encrypt, CN=YR1`, valid 2026-10-08 → 2027-01-06 (full output in `docs/evidence/https.md`).
+> - `/api/profile` `source` → `database`.
 
 ---
 
