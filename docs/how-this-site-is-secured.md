@@ -2,7 +2,7 @@
 
 **Question: How do I know my data to your site is encrypted?**
 
-When you visit `https://tristaninfo.me`, your browser and my server set up an encrypted TLS connection before any page or form data is sent. The server proves who it is with a certificate from Let's Encrypt, a certificate authority that your browser already trusts. If someone tried to read or change the traffic on the way, your browser would see that the certificate doesn't match and warn you. If you type `http://` by mistake, the server doesn't serve the page over plain HTTP. It sends you straight to the `https://` address.
+When you visit `https://tristaninfo.me`, your browser and my server set up an encrypted TLS connection before any page or data is sent. The server proves who it is with a certificate from Let's Encrypt, a certificate authority that your browser already trusts. If someone tried to read or change the traffic on the way, your browser would see that the certificate doesn't match and warn you. If you type `http://` by mistake, the server doesn't serve the page over plain HTTP. It sends you straight to the `https://` address.
 
 ## The certificate
 
@@ -30,7 +30,7 @@ Congratulations, all simulated renewals succeeded:
 
 ```
 $ systemctl list-timers | grep certbot
-Wed 2026-10-07 23:44:35 UTC  1h 8min Wed 2026-10-07 08:23:44 UTC  14h ago certbot.timer  certbot.service
+Wed 2026-10-07 23:44:35 UTC  1h 8min Wed 2026-10-07 08:23:44 UTC 14h ago certbot.timer  certbot.service
 ```
 
 ## Which ports are open
