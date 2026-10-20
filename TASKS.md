@@ -50,8 +50,8 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 7. GA4
 
-- [ ] Explain how browser activity reaches GA4 (consent, gtag, collect request, Realtime) — `docs/evidence/ex06.md` or README
-- [ ] Explain why the outbound click event is useful for this site — `docs/evidence/ex06.md`
+- [x] Explain how browser activity reaches GA4 (consent, gtag, collect request, Realtime) — `docs/evidence/ex06.md` or README
+- [x] Explain why the outbound click event is useful for this site — `docs/evidence/ex06.md`
 
 ## 8. Engineering record
 
