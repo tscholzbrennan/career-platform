@@ -11,6 +11,7 @@ from app.formatting import duration_months, total_months
 from app.migrations import ensure_columns
 from app.seed import seed_data
 from app.services.content_service import (
+    ContentUnavailable,
     get_education,
     get_experiences,
     get_project_by_slug,
@@ -48,13 +49,22 @@ def startup_event():
         db.close()
 
 
+def projects_unavailable_page(request: Request, name: str, context: dict):
+    context = {"request": request, "profile": get_public_profile(), "projects": [], "projects_unavailable": True, **context}
+    return templates.TemplateResponse(name, context, status_code=503)
+
+
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    experiences = get_experiences()
+    try:
+        projects = get_projects()
+    except ContentUnavailable:
+        return projects_unavailable_page(request, "index.html", {"experiences": experiences})
     profile = get_public_profile()
-    projects = get_projects() or profile.get("featured_projects", [])
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "profile": profile, "projects": projects[:3], "experiences": get_experiences()},
+        {"request": request, "profile": profile, "projects": projects[:3], "experiences": experiences},
     )
 
 
@@ -76,8 +86,11 @@ async def experience(request: Request):
 
 @app.get("/projects", response_class=HTMLResponse)
 async def projects(request: Request):
+    try:
+        projects = get_projects()
+    except ContentUnavailable:
+        return projects_unavailable_page(request, "projects.html", {})
     profile = get_public_profile()
-    projects = get_projects()
     return templates.TemplateResponse(
         "projects.html",
         {"request": request, "profile": profile, "projects": projects},
@@ -86,8 +99,11 @@ async def projects(request: Request):
 
 @app.get("/projects/{slug}", response_class=HTMLResponse)
 async def project_detail(request: Request, slug: str):
+    try:
+        project = get_project_by_slug(slug)
+    except ContentUnavailable:
+        return projects_unavailable_page(request, "projects.html", {})
     profile = get_public_profile()
-    project = get_project_by_slug(slug)
     if project is None:
         raise HTTPException(status_code=404)
     return templates.TemplateResponse(

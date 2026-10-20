@@ -6,7 +6,13 @@
 <div class="r">
   <div class="c s12 name-cell"><h1>Projects</h1></div>
 </div>
-{% if not projects %}
+{% if projects_unavailable %}
+<div class="r">
+  <div class="c s12 empty">
+    <p>Projects temporarily unavailable. Please try again in a few minutes.</p>
+  </div>
+</div>
+{% elif not projects %}
 <div class="r">
   <div class="c s12 empty">
     <p>Project write-ups are being updated. In the meantime, my code is on <a href="{{ profile.contact_links.github }}">GitHub</a>.</p>

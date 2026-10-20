@@ -79,7 +79,14 @@
 </div>
 {% endif %}
 
-{% if projects %}
+{% if projects_unavailable %}
+<div class="r">
+  <div class="c s12 head-cell"><h2>Featured projects</h2></div>
+</div>
+<div class="r">
+  <div class="c s12 empty"><p>Projects temporarily unavailable. Please try again in a few minutes.</p></div>
+</div>
+{% elif projects %}
 <div class="r">
   <div class="c s12 head-cell"><h2>Featured projects</h2><a href="/projects">See all</a></div>
 </div>

@@ -4,11 +4,11 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 1. Profile and project data
 
-- [ ] Return 503 and show "Projects temporarily unavailable" when project reads fail, keeping the profile visible — `app/services/content_service.py`, `app/main.py`, templates
-- [ ] Stop substituting fallback `featured_projects` for failed project reads on `/` — `app/main.py` `home`
-- [ ] Change the outage tests to expect 503 and no sample projects — `tests/test_failure_states.py`
-- [ ] Add a test that projects return after the database recovers, without a restart — `tests/test_failure_states.py`
-- [ ] Explain the initial database engine choice (SQLite) — README decisions section
+- [x] Return 503 and show "Projects temporarily unavailable" when project reads fail, keeping the profile visible — `app/services/content_service.py`, `app/main.py`, templates
+- [x] Stop substituting fallback `featured_projects` for failed project reads on `/` — `app/main.py` `home`
+- [x] Change the outage tests to expect 503 and no sample projects — `tests/test_failure_states.py`
+- [x] Add a test that projects return after the database recovers, without a restart — `tests/test_failure_states.py`
+- [x] Explain the initial database engine choice (SQLite) — README decisions section
 
 ## 2. Azure deployment
 

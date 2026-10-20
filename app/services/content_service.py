@@ -8,19 +8,30 @@ from app.models import Education, Experience, Project, Skill
 logger = logging.getLogger(__name__)
 
 
-def _query(load, default):
-    # Pages must keep rendering when the database is unavailable, so a failed
-    # read degrades to an empty result instead of a 500.
+class ContentUnavailable(Exception):
+    """A content read failed, so the caller can't tell "none" from "unknown"."""
+
+
+def _load(load):
     db = None
     try:
         db = SessionLocal()
         return load(db)
-    except Exception:
-        logger.exception("Content query failed; serving an empty result")
-        return default
+    except Exception as exc:
+        logger.exception("Content query failed")
+        raise ContentUnavailable from exc
     finally:
         if db is not None:
             db.close()
+
+
+def _query(load, default):
+    # Pages must keep rendering when the database is unavailable, so a failed
+    # read degrades to an empty result instead of a 500.
+    try:
+        return _load(load)
+    except ContentUnavailable:
+        return default
 
 
 def get_experiences():
@@ -44,9 +55,11 @@ def get_skills_by_category():
     return _query(load, {})
 
 
+# Project reads raise ContentUnavailable instead of degrading: an empty list
+# would tell visitors there are no projects when the truth is "unknown".
 def get_projects():
-    return _query(lambda db: db.query(Project).order_by(Project.id.desc()).all(), [])
+    return _load(lambda db: db.query(Project).order_by(Project.id.desc()).all())
 
 
 def get_project_by_slug(slug: str):
-    return _query(lambda db: db.query(Project).filter(Project.slug == slug).first(), None)
+    return _load(lambda db: db.query(Project).filter(Project.slug == slug).first())

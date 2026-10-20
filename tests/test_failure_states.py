@@ -14,6 +14,7 @@ from app.models import Project
 from app.services.fallback_profile import load_fallback_profile
 
 PAGES = ["/", "/about", "/experience", "/projects", "/resume", "/contact"]
+PROJECT_PAGES = ["/", "/projects", "/projects/demand-forecasting-dashboard"]
 
 
 def _broken_session():
@@ -39,11 +40,11 @@ def database_down(monkeypatch):
         json.dump(snapshot, handle)
 
 
-def test_every_page_still_renders_when_the_database_is_down(database_down):
+def test_every_page_still_shows_the_profile_when_the_database_is_down(database_down):
     client = TestClient(app)
     for path in PAGES:
         response = client.get(path)
-        assert response.status_code == 200, path
+        assert response.status_code == (503 if path in PROJECT_PAGES else 200), path
         assert "Snapshot Person" in response.text, path
 
 
@@ -52,9 +53,23 @@ def test_visitors_never_see_the_internal_fallback_banner(database_down):
     assert "fallback snapshot" not in html.lower()
 
 
-def test_home_shows_snapshot_projects_when_the_database_is_down(database_down):
-    html = TestClient(app).get("/").text
-    assert "Snapshot Project" in html
+def test_project_pages_say_projects_are_unavailable_when_the_database_is_down(database_down):
+    client = TestClient(app)
+    for path in PROJECT_PAGES:
+        response = client.get(path)
+        assert response.status_code == 503, path
+        assert "Projects temporarily unavailable" in response.text, path
+        assert "Snapshot Project" not in response.text, path
+
+
+def test_projects_return_after_the_database_recovers(monkeypatch, database_down):
+    client = TestClient(app)
+    assert client.get("/projects").status_code == 503
+    monkeypatch.undo()
+    response = client.get("/projects")
+    assert response.status_code == 200
+    assert "Projects temporarily unavailable" not in response.text
+    assert 'href="/projects/' in response.text
 
 
 def test_resume_download_survives_a_database_outage(database_down):
