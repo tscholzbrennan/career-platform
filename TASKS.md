@@ -12,10 +12,10 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 2. Azure deployment
 
-- [ ] Run and record a controlled VM restart (site responds, reads database after reboot) — `docs/superpowers/plans/2026-10-01-operate-the-vm.md` or README
-- [ ] Explain which parts made restart survival work (systemd `enable`, `WorkingDirectory`, nginx service) — README
-- [ ] Document the VM's private IP alongside the public IP and network rules — README or `docs/evidence/ex03.md`
-- [ ] Confirm the VM is still running and keep it running — `az vm get-instance-view` result in README; don't run Task 6 deallocate
+- [x] ~~Run and record a controlled VM restart (site responds, reads database after reboot) — `docs/superpowers/plans/2026-10-01-operate-the-vm.md` or README~~ — VM retired after Railway cutover; README explains the reboot test wasn't run (2026-10-20)
+- [x] Explain which parts made restart survival work (systemd `enable`, `WorkingDirectory`, nginx service) — README
+- [x] Document the VM's private IP alongside the public IP and network rules — README or `docs/evidence/ex03.md`
+- [x] ~~Confirm the VM is still running and keep it running~~ — VM is deallocated, not deleted; state recorded in README (2026-10-20)
 
 ## 3. Domain and HTTPS
 
