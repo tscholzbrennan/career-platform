@@ -81,6 +81,7 @@ def test_built_in_fallback_is_the_real_person_not_a_placeholder():
     data = load_fallback_profile()  # no snapshot file exists in the test environment
     text = json.dumps(data)
     assert data["full_name"] == "Tristan Scholz-Brennan"
+    assert data["email"] == "tristan@tristaninfo.me"
     assert "example.com" not in text
     assert "Data & AI Engineer" not in text
     assert 'https://www.linkedin.com"' not in text

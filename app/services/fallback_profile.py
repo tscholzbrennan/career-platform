@@ -14,7 +14,7 @@ _BUILT_IN_PROFILE: Dict[str, Any] = {
         "and Business Analytics (May 2027). Seeking full-time Data Analyst and Business Analyst roles."
     ),
     "location": "Los Angeles, CA",
-    "email": "Tscholzbrennan@gmail.com",
+    "email": "tristan@tristaninfo.me",
     "linkedin_url": "https://www.linkedin.com/in/tristan-scholz-brennan-a7a1922a0",
     "github_url": "https://github.com/tscholzbrennan",
     "resume_url": "/static/resume/Tristan-Scholz-Brennan-Resume.pdf",
@@ -24,7 +24,7 @@ _BUILT_IN_PROFILE: Dict[str, Any] = {
     "about": None,
     "highlights": [],
     "contact_links": {
-        "email": "Tscholzbrennan@gmail.com",
+        "email": "tristan@tristaninfo.me",
         "linkedin": "https://www.linkedin.com/in/tristan-scholz-brennan-a7a1922a0",
         "github": "https://github.com/tscholzbrennan",
     },
