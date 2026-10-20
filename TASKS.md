@@ -19,10 +19,10 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 3. Domain and HTTPS
 
-- [ ] Change `www` to a proxied record with a Cloudflare redirect rule to the root — Cloudflare, then record in DNS evidence
-- [ ] Verify `http://www` and `https://www` both land on the root with a valid cert — `curl -IL` output, dated
-- [ ] Record Railway's certificate hostname, validity, and renewal — `openssl s_client` output against `tristaninfo.me`
-- [ ] Add each DNS record's purpose to the record table — `docs/evidence/dns-before-zoho.md` or README
+- [x] ~~Change `www` to a proxied record with a Cloudflare redirect rule to the root — Cloudflare, then record in DNS evidence~~ — professor OK'd leaving `www` as is; decision and fix recorded in `docs/evidence/https.md` (2026-10-20)
+- [x] ~~Verify `http://www` and `https://www` both land on the root with a valid cert — `curl -IL` output, dated~~ — not applicable; dated `www` check in `docs/evidence/https.md`
+- [x] Record Railway's certificate hostname, validity, and renewal — `openssl s_client` output against `tristaninfo.me`
+- [x] Add each DNS record's purpose to the record table — `docs/evidence/dns-before-zoho.md` or README
 
 ## 4. Railway and PostgreSQL migration
 
