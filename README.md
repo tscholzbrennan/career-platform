@@ -19,6 +19,8 @@ A recruiter-focused personal career website built with FastAPI, using PostgreSQL
    `uvicorn app.main:app --reload`
 4. Visit `http://localhost:8000`.
 
+`career_platform.db` isn't in the repo. On first start the app creates it and fills it with placeholder seed data. To work with real content, copy it down from Railway: `python -m app.copy_database --source "$RAILWAY_DATABASE_URL" --target sqlite:///career_platform.db`.
+
 ## Environment
 
 Copy `.env.example` to `.env` and adjust values if needed.
@@ -30,6 +32,22 @@ Run the tests against Postgres with `TEST_DATABASE_URL=postgresql://localhost/ca
 ## Deploy
 
 Production runs on Railway, built and started with the settings in `railway.json`. The web service's `DATABASE_URL` references the Postgres service.
+
+**Deploy branch: `main`, auto-deploy on.** Every push to `main` builds and deploys with no manual step, so a push to `main` is a production release. Railway records each deploy on GitHub in the `chic-flexibility / production` environment. On 2026-10-20 each push's deploy started within seconds and succeeded 40–90 seconds later. Railway checks `/` before switching traffic to a new deploy (`healthcheckPath` in `railway.json`), so a build that doesn't start keeps the old one serving.
+
+A change goes: diff reviewed → `pytest` passes locally → commit → push to `main` → Railway deploys → check the live site. One change recorded end to end: [`docs/evidence/reviewed-change.md`](docs/evidence/reviewed-change.md).
+
+### Rolling back a bad deploy
+
+**Code.** The fastest way is in the Railway dashboard: web service → Deployments → pick the last good deployment → **Redeploy**. That serves the old build within a minute, without touching git. Then fix `main` so the next push doesn't bring the bad code back: `git revert <bad sha>`, run `pytest`, and push. The revert deploys like any other change.
+
+**Database.** The app never drops or rewrites columns. At startup, `ensure_columns` only adds missing ones, so older code still runs against a newer schema, and a code rollback doesn't need a database rollback. If a deploy or a manual edit damaged the data:
+
+1. Before any risky change, take a backup: `pg_dump "$RAILWAY_DATABASE_URL" > railway-$(date +%Y%m%d-%H%M).sql` (kept outside the repo). Railway runs PostgreSQL 18, and `pg_dump` refuses to dump a newer server than itself. The laptop's Homebrew `pg_dump` is 16, so use 18: `brew install postgresql@18`, then `/opt/homebrew/opt/postgresql@18/bin/pg_dump`.
+2. To restore, roll the code back first, then load the backup into an empty schema: `psql "$RAILWAY_DATABASE_URL" -c 'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'` followed by `psql "$RAILWAY_DATABASE_URL" < railway-<date>.sql`.
+3. Check: `curl -s https://tristaninfo.me/api/profile` shows `"source": "database"` and the expected content.
+
+While the database is broken, visitors still see the profile from the fallback snapshot, and project pages return `503` instead of wrong data.
 
 One-off data copy from SQLite into Postgres:
 `python -m app.copy_database --source sqlite:///career_platform.db --target "$DATABASE_PUBLIC_URL"`
@@ -56,12 +74,12 @@ Moving to Railway handed over the OS, the runtime install, TLS and the database 
 The VM's SQLite file stopped receiving changes at cutover (2026-10-08). Anything written to Railway Postgres since then isn't on the VM. A rollback therefore copies the data back first, then moves DNS:
 
 1. **Freeze edits** on the Railway database until the rollback is finished.
-2. **Back up Postgres:** `pg_dump "$RAILWAY_DATABASE_URL" > railway-$(date +%Y%m%d).sql`. Keep this file out of the repo.
+2. **Back up Postgres:** `pg_dump "$RAILWAY_DATABASE_URL" > railway-$(date +%Y%m%d).sql`. Keep this file out of the repo. Use `pg_dump` 18 (see the note under "Rolling back a bad deploy").
 3. **Start the VM** (`az vm start -g RG-CAREER-PLATFORM -n vm-career-platform`) and back up its current database: `sqlite3 career_platform.db ".backup ~/career_platform.db.bak-$(date +%Y%m%dT%H%M%S)"`.
 4. **Copy Postgres into a fresh SQLite file** on the laptop. The copy command works in either direction, and a new file needs no `--replace`:
    `python -m app.copy_database --source "$RAILWAY_DATABASE_URL" --target sqlite:///rollback.db`
    It prints the row counts and stops if any table's count doesn't match.
-5. **Swap it in on the VM:** `scp` `rollback.db` over, `sudo systemctl stop career-platform`, move it to `~/career-platform/career_platform.db`, then `sudo systemctl start career-platform`.
+5. **Swap it in on the VM.** Don't `git pull` on the VM before this step: `career_platform.db` stopped being tracked on 2026-10-20, so pulling would delete the VM's copy. To bring the VM's code up to date, run `git pull` only after the backup in step 3, then put the database back. **Swap:** `scp` `rollback.db` over, `sudo systemctl stop career-platform`, move it to `~/career-platform/career_platform.db`, then `sudo systemctl start career-platform`.
 6. **Check on the VM** before DNS points there: `curl -s -H 'Host: tristaninfo.me' localhost:8000/api/profile` should show `"source": "database"` and the current email. Also check that `sudo certbot certificates` shows a valid certificate. The VM's certificate expires 2027-01-04 and only renews while the VM is running.
 7. **Move DNS** in Cloudflare: replace the apex CNAME to `aq2r9r5b.up.railway.app` with `A tristaninfo.me → 20.221.247.215`, DNS only. Then run `dig +short tristaninfo.me` and `curl -s https://tristaninfo.me/api/profile` again.
 

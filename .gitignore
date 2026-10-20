@@ -219,3 +219,6 @@ __marimo__/
 
 # Local worktree directories
 .worktrees/
+
+# Local SQLite database (production uses Railway Postgres)
+career_platform.db

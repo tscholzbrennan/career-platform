@@ -35,10 +35,10 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 5. Reviewed change through Railway
 
-- [ ] Record one change: diff reviewed, local check, commit SHA, Railway deployment, live result — README or new evidence file
-- [ ] Write code and database rollback for a bad deploy — README rollback section
-- [ ] Record the Railway deploy branch and auto-deploy setting — README deploy section
-- [ ] Decide whether to stop tracking `career_platform.db` in the public repo — `.gitignore`, `git rm --cached`
+- [x] Record one change: diff reviewed, local check, commit SHA, Railway deployment, live result — README or new evidence file
+- [x] Write code and database rollback for a bad deploy — README rollback section
+- [x] Record the Railway deploy branch and auto-deploy setting — README deploy section
+- [x] Decide whether to stop tracking `career_platform.db` in the public repo — `.gitignore`, `git rm --cached` — untracked 2026-10-20; clean checkout passes 50 tests and starts
 
 ## 6. Zoho email
 
