@@ -10,6 +10,14 @@ A recruiter-focused personal career website built with FastAPI, using PostgreSQL
 - Plan: [Move to Railway + PostgreSQL](docs/superpowers/plans/2026-10-08-railway-postgres-migration.md) (2026-10-08). There's no separate spec file for this move. The spec was the request in conversation, quoted at the top of the plan.
 - Project 1 submission index: [`docs/project-1-submission.md`](docs/project-1-submission.md)
 
+Evidence:
+
+- [Exercise 6: custom-domain email (Zoho) and analytics (GA4)](docs/evidence/ex06.md)
+- [Zoho Mail header check (Test 02, delivered to Spam)](docs/evidence/zoho-header-check.md)
+- [DNS records and their purposes](docs/evidence/dns-before-zoho.md)
+- [HTTPS certificate and `www`](docs/evidence/https.md)
+- [A reviewed change through Railway](docs/evidence/reviewed-change.md)
+
 ## Local setup
 
 1. Create a virtual environment.

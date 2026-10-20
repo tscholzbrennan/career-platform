@@ -42,11 +42,11 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 6. Zoho email
 
-- [ ] Add the before-MX message line and what happened to it — `docs/evidence/ex06.md`
-- [ ] Explain MX, SPF, DKIM, and DMARC — `docs/evidence/ex06.md` or README
-- [ ] Send, receive, and reply in Zoho webmail (not only the MCP server), and record it — `docs/evidence/ex06.md`
-- [ ] Explain the Test 02 Spam result as an unresolved check — `docs/evidence/zoho-header-check.md`
-- [ ] Link `ex06.md` and `zoho-header-check.md` from the README and submission index
+- [x] Add the before-MX message line and what happened to it — `docs/evidence/ex06.md`
+- [x] Explain MX, SPF, DKIM, and DMARC — `docs/evidence/ex06.md` or README
+- [x] ~~Send, receive, and reply in Zoho webmail (not only the MCP server), and record it~~ — kept the MCP reply; `ex06.md` says which tests used webmail (send: Test 02; receive: Test01) and that the reply went through the MCP server (2026-10-20)
+- [x] Explain the Test 02 Spam result as an unresolved check — `docs/evidence/zoho-header-check.md`
+- [x] Link `ex06.md` and `zoho-header-check.md` from the README and submission index
 
 ## 7. GA4
 

@@ -12,3 +12,4 @@ Live site: <https://tristaninfo.me>
 ## Evidence
 
 - [Exercise 6: custom-domain email and analytics](evidence/ex06.md)
+- [Zoho Mail header check (Test 02)](evidence/zoho-header-check.md)

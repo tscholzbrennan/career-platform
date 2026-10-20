@@ -63,6 +63,14 @@ Subject: Test 02: Outbound
 User-Agent: Zoho Mail
 ```
 
-## Why it went to Spam
+## Why it went to Spam: unresolved
 
-Authentication was not the cause. The headers don't say why Gmail filtered the message. The likely causes are that `tristaninfo.me` had no sending history before this day, and that the message was a short "Test" with almost no body. A follow-up test sent after 22:01 UTC should show `dmarc=pass` in Gmail's own `Authentication-Results` line.
+**Status: not resolved.** Authentication was not the cause: SPF and DKIM passed and aligned. Gmail's headers don't say why it filtered the message, and Gmail doesn't publish its spam reasons, so the cause isn't confirmed.
+
+What's known:
+
+- **Most likely causes**, untested: `tristaninfo.me` had no sending history before that day, and the message was a two-word "Test" body. Both are typical triggers for a brand-new domain.
+- **Later messages went to the Inbox.** "Test 04" (2026-10-15) and the reply to "Test01: inbound" (2026-10-19) were both delivered to the Gmail Inbox, not Spam. Test 04 shows `dmarc=pass` in Gmail's own header (see `ex06.md`). So the Spam result hasn't repeated.
+- **The missing DMARC record** at send time (published 5 minutes later) may have contributed, but Gmail doesn't say.
+
+What would settle it: send a few more messages with normal content to more than one outside provider (Gmail, Outlook) and see whether any land in Spam. Also check the DMARC aggregate reports that `rua=mailto:tristan@tristaninfo.me` collects, for messages that failed. Until then, this is an open check, not a closed one.
