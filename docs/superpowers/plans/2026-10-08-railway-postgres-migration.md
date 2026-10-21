@@ -612,7 +612,7 @@ Expected: Railway IPs, `200`, a certificate issued for `tristaninfo.me` (Let's E
 
 **Undo:** in Cloudflare, delete the two CNAMEs and restore `A @ → 20.221.247.215` and `A www → 20.221.247.215`. The VM is untouched and still running, so the site is back within the TTL.
 
-> **Recorded 2026-10-20 (after the fact):** cut over on **2026-10-08**. Cloudflare shows the apex CNAME `tristaninfo.me → aq2r9r5b.up.railway.app` and the `_railway-verify` TXT record last modified at 22:18 and 22:19 UTC. Railway's certificate for `tristaninfo.me` dates from the same day. **Deviations:** only the apex was added as a Railway custom domain. `www` was left as the old `A 20.221.247.215`, so it stopped answering once the VM was deallocated. The professor OK'd leaving it (see `docs/evidence/https.md`). Steps 1 (lower TTL) and the VM nginx-log check weren't recorded.
+> **Recorded 2026-10-20 (after the fact):** cut over on **2026-10-08**. Cloudflare shows the apex CNAME `tristaninfo.me → aq2r9r5b.up.railway.app` and the `_railway-verify` TXT record last modified at 22:18 and 22:19 UTC. Railway's certificate for `tristaninfo.me` dates from the same day. **Deviations:** only the apex was added as a Railway custom domain. `www` was left as the old `A 20.221.247.215`, so it stopped answering once the VM was deallocated. Fixed 2026-10-20: `www` is now a proxied record, and an existing Cloudflare redirect rule sends it to `https://tristaninfo.me` (see `docs/evidence/https.md`). Steps 1 (lower TTL) and the VM nginx-log check weren't recorded.
 >
 > Post-cutover checks, 2026-10-20 16:32 PDT:
 > - `dig +short tristaninfo.me` → `69.46.46.105`, the same address as `aq2r9r5b.up.railway.app`, not `20.221.247.215`.

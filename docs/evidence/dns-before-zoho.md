@@ -16,7 +16,7 @@ The zone holds **10 records**. A second listing with `--per-page 5000` also retu
 
 | Type | Name | Content | Priority | TTL | Proxy | Last modified (UTC) | Purpose |
 |---|---|---|---|---|---|---|---|
-| A | `www.tristaninfo.me` | `20.221.247.215` |  | Auto | DNS only | 2026-10-01 21:41 | Sent `www` to the Azure VM. Stale since the Railway cutover; the VM is deallocated, so `www` doesn't answer (2026-10-20). Left as is; see `docs/evidence/https.md`. |
+| A | `www.tristaninfo.me` | `20.221.247.215` |  | Auto | DNS only | 2026-10-01 21:41 | Sent `www` to the Azure VM. Stale since the Railway cutover; the VM is deallocated, so `www` doesn't answer (2026-10-20). Changed 2026-10-20 to `192.0.2.1`, **Proxied**, so the "Redirect from www to root" rule sends `www` to `https://tristaninfo.me` (see `docs/evidence/https.md`). |
 | CNAME | `tristaninfo.me` | `aq2r9r5b.up.railway.app` |  | Auto | DNS only | 2026-10-08 22:18 | Points the root domain at the Railway web service. Cloudflare flattens a CNAME at the apex into A records. |
 | MX | `tristaninfo.me` | `mx.zoho.com` | 10 | 600 | DNS only | 2026-10-13 21:25 | Primary mail server: where other servers deliver mail for `@tristaninfo.me`. |
 | MX | `tristaninfo.me` | `mx2.zoho.com` | 20 | 600 | DNS only | 2026-10-13 21:25 | First backup mail server, tried if `mx` doesn't answer. |

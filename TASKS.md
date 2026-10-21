@@ -15,12 +15,12 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 - [x] ~~Run and record a controlled VM restart (site responds, reads database after reboot) — `docs/superpowers/plans/2026-10-01-operate-the-vm.md` or README~~ — VM retired after Railway cutover; README explains the reboot test wasn't run (2026-10-20)
 - [x] Explain which parts made restart survival work (systemd `enable`, `WorkingDirectory`, nginx service) — README
 - [x] Document the VM's private IP alongside the public IP and network rules — README or `docs/evidence/ex03.md`
-- [x] ~~Confirm the VM is still running and keep it running~~ — VM is deallocated, not deleted; state recorded in README (2026-10-20)
+- [x] ~~Confirm the VM is still running and keep it running~~ — VM is deallocated, not deleted; state recorded in README (2026-10-20); instructor confirmed the VM needn't keep running
 
 ## 3. Domain and HTTPS
 
-- [x] ~~Change `www` to a proxied record with a Cloudflare redirect rule to the root — Cloudflare, then record in DNS evidence~~ — professor OK'd leaving `www` as is; decision and fix recorded in `docs/evidence/https.md` (2026-10-20)
-- [x] ~~Verify `http://www` and `https://www` both land on the root with a valid cert — `curl -IL` output, dated~~ — not applicable; dated `www` check in `docs/evidence/https.md`
+- [x] Change `www` to a proxied record with a Cloudflare redirect rule to the root — Cloudflare, then record in DNS evidence — done 2026-10-20 17:46 PDT; the rule already existed, the record was made proxied
+- [x] Verify `http://www` and `https://www` both land on the root with a valid cert — `curl -IL` output, dated — `docs/evidence/https.md`, 2026-10-20 17:47 PDT
 - [x] Record Railway's certificate hostname, validity, and renewal — `openssl s_client` output against `tristaninfo.me`
 - [x] Add each DNS record's purpose to the record table — `docs/evidence/dns-before-zoho.md` or README
 
@@ -44,7 +44,7 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 - [x] Add the before-MX message line and what happened to it — `docs/evidence/ex06.md`
 - [x] Explain MX, SPF, DKIM, and DMARC — `docs/evidence/ex06.md` or README
-- [x] ~~Send, receive, and reply in Zoho webmail (not only the MCP server), and record it~~ — kept the MCP reply; `ex06.md` says which tests used webmail (send: Test 02; receive: Test01) and that the reply went through the MCP server (2026-10-20)
+- [x] ~~Send, receive, and reply in Zoho webmail (not only the MCP server), and record it~~ — kept the MCP reply; the README's Email and analytics section says which tests used webmail (send: Test 02; receive: Test01) and that the reply went through the MCP server (2026-10-20)
 - [x] Explain the Test 02 Spam result as an unresolved check — `docs/evidence/zoho-header-check.md`
 - [x] Link `ex06.md` and `zoho-header-check.md` from the README and submission index
 
@@ -55,16 +55,16 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 ## 8. Engineering record
 
-- [ ] Add live address, setup, and update steps — `README.md`
-- [ ] Add Azure and Railway diagrams with locations, protocols, ports, data flow, email and analytics paths — `README.md`
-- [ ] Explain how the migration preserved current data and which responsibilities moved — `README.md`
-- [ ] Add two decisions with alternatives (Railway migration, managed vs self-hosted email) — `README.md`
-- [ ] Link the two investigated failures (`ex03.md` dependency, `ex05.md` simulated DNS/TLS) and list remaining limitations — `README.md`
-- [ ] Write a short reflection — `README.md`
-- [ ] Record costs, credits, Railway trial end date, expirations, and cleanup plans — `README.md`
+- [x] Add live address, setup, and update steps — `README.md`
+- [x] Add Azure and Railway diagrams with locations, protocols, ports, data flow, email and analytics paths — `README.md`
+- [x] Explain how the migration preserved current data and which responsibilities moved — `README.md`
+- [x] Add two decisions with alternatives (Railway migration, managed vs self-hosted email) — `README.md`
+- [x] Link the two investigated failures (`ex03.md` dependency, `ex05.md` simulated DNS/TLS) and list remaining limitations — `README.md`
+- [x] Write a short reflection — `README.md`
+- [x] Record costs, credits, Railway trial end date, expirations, and cleanup plans — `README.md`
 - [ ] Add repo URL, live URL, final SHA, and links for all 8 categories — `docs/project-1-submission.md`
 
 ## Loose ends
 
 - [ ] Decide on the uncommitted about-text edit — `data/fallback-profile.json`
-- [ ] Check `feat/railway-postgres` and `fix/identity-and-contact-links` are merged, then delete them — `git branch --merged main`
+- [x] Check `feat/railway-postgres` and `fix/identity-and-contact-links` are merged, then delete them — `git branch --merged main` — both merged; deleted locally and `origin/feat/railway-postgres` (2026-10-20)
