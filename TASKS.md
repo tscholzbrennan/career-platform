@@ -28,7 +28,7 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 
 - [x] Add a Railway migration spec, or note in the plan that the spec was the conversation request — `docs/superpowers/specs/`
 - [x] Link the original spec and all plans from the README and submission index — `README.md`, `docs/project-1-submission.md`
-- [ ] Record Task 4 results (Railway domain deploy, page checks, seed didn't add rows) — Railway plan, Task 4 — recorded 2026-10-20 except the direct seed row count, which needs a Railway DB read
+- [x] Record Task 4 results (Railway domain deploy, page checks, seed didn't add rows) — Railway plan, Task 4 — recorded 2026-10-20; direct row count on Railway 2026-10-21 matches the copy (1/3/1/12/1/0/0)
 - [x] Record Task 5 cutover and post-cutover checks (dig, curl, cert, `source: database`) — Railway plan, Task 5
 - [x] Write a rollback procedure that covers data written after cutover — README rollback section
 - [x] Compare who manages OS, runtime, entry point, TLS, code, config, DB software, data, DNS on Azure vs Railway — README

@@ -571,7 +571,7 @@ curl -s $URL/ | grep -c "example.com"
 
 Expected: `database Tristan Scholz-Brennan Tscholzbrennan@gmail.com`, every path `200`, and `0` placeholder hits. Then open the Railway URL in a browser and compare each page against `https://tristaninfo.me`. They should look the same.
 
-- [ ] **Step 5: Check that the seed didn't add rows.** Re-run the counts from Task 3, Step 5 (`get_table_names` swapped for a count loop, or `railway connect <Postgres>` + `select count(*) from projects;`). Expected: the same counts as the copy.
+- [x] **Step 5: Check that the seed didn't add rows.** Re-run the counts from Task 3, Step 5 (`get_table_names` swapped for a count loop, or `railway connect <Postgres>` + `select count(*) from projects;`). Expected: the same counts as the copy.
 
 - [ ] **Step 6: If you deployed from the branch, merge the PR** and set the source branch back to `main`. Check that the deploy from `main` also passes Step 4.
 
@@ -582,7 +582,7 @@ Expected: `database Tristan Scholz-Brennan Tscholzbrennan@gmail.com`, every path
 > - `/`, `/about`, `/experience`, `/projects`, `/resume`, `/contact`, `/privacy` and the resume PDF → all `200`. Placeholder hits for `example.com` on `/` → `0`.
 > - The deploy source is `main` with auto-deploy on. A push to `main` was live about 50 s later (seen with `cb7c2d3` on 2026-10-15). The branch and auto-deploy setting are read from that behaviour, not from the dashboard.
 >
-> **Step 5 (seed didn't add rows):** only indirect evidence so far. `/projects` lists exactly 1 project (`Career Platform`), the same as the copy, and no seed placeholder appears on any page. `seed_data` only writes into empty tables, and every table was non-empty after the copy. A direct `select count(*)` on Railway still needs to be run; it's pending.
+> **Step 5 (seed didn't add rows):** only indirect evidence so far. `/projects` lists exactly 1 project (`Career Platform`), the same as the copy, and no seed placeholder appears on any page. `seed_data` only writes into empty tables, and every table was non-empty after the copy. **Direct count 2026-10-21:** the user ran `select count(*)` on each table with `psql` against Railway: profiles 1, experiences 3, projects 1, skills 12, education 1, media 0, fallback_profile_snapshots 0. These are identical to the copy on 2026-10-08, so the seed added no rows.
 
 ---
 
