@@ -203,6 +203,8 @@ The site keeps a visible public profile even when the database is unavailable by
 
 Projects are the exception. If project rows can't be read, `/`, `/projects` and `/projects/<slug>` return `503` and show "Projects temporarily unavailable" next to the profile, instead of showing stale or sample projects. They come back on the next request once the database recovers, without a restart.
 
+An empty projects table is different from a failed read. The query succeeds with no rows, so pages return `200`: `/projects` says the write-ups are being updated and links to GitHub, and the home page leaves out the Featured projects section (`test_empty_project_list_has_a_helpful_empty_state`).
+
 ## Email and analytics
 
 Results: [`docs/evidence/ex06.md`](docs/evidence/ex06.md) (the test table, authentication headers and GA4 screenshots) and [`docs/evidence/zoho-header-check.md`](docs/evidence/zoho-header-check.md) (the Test 02 header analysis and its unresolved Spam result).

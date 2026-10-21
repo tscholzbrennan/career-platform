@@ -62,7 +62,7 @@ From the requirements audit on 2026-10-20. Due 2026-10-22, 1:45 PM.
 - [x] Link the two investigated failures (`ex03.md` dependency, `ex05.md` simulated DNS/TLS) and list remaining limitations — `README.md`
 - [x] Write a short reflection — `README.md`
 - [x] Record costs, credits, Railway trial end date, expirations, and cleanup plans — `README.md`
-- [ ] Add repo URL, live URL, final SHA, and links for all 8 categories — `docs/project-1-submission.md`
+- [x] Add repo URL, live URL, final SHA, and links for all 8 categories — `docs/project-1-submission.md`
 
 ## Loose ends
 
