@@ -40,6 +40,7 @@ Everything below is in this repository. README links point to sections of [`READ
 - [README: How the move preserved the data](../README.md#how-the-move-preserved-the-data)
 - [README: Rollback to the Azure VM](../README.md#rollback-to-the-azure-vm), covering data written after cutover
 - [README: Who manages what: Azure VM vs Railway](../README.md#who-manages-what-azure-vm-vs-railway)
+- [Postgres password rotation](evidence/postgres-credential-rotation.md) after Railway's 2026-10-21 security disclosure: checks for misuse, timeline, old password rejected
 - Diagrams: [README: Architecture](../README.md#architecture) and [`request-path-diagrams.md`](request-path-diagrams.md)
 
 ## 5. Verified website update

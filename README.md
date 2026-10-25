@@ -22,6 +22,7 @@ Evidence:
 - [How this site is secured](docs/how-this-site-is-secured.md): my Exercise 04 HTTPS explanation, written for the Azure VM
 - [HTTPS certificate and `www`](docs/evidence/https.md)
 - [A reviewed change through Railway](docs/evidence/reviewed-change.md)
+- [Postgres password rotation (2026-10-25)](docs/evidence/postgres-credential-rotation.md)
 
 ## Local setup
 
