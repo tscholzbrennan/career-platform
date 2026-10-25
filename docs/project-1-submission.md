@@ -4,7 +4,7 @@
 |---|---|
 | Repository | <https://github.com/tscholzbrennan/career-platform> |
 | Live site | <https://tristaninfo.me> (`www.tristaninfo.me` redirects there) |
-| Final commit | Added at submission, along with the tag `project-1` |
+| Final commit | [`3aad221`](https://github.com/tscholzbrennan/career-platform/commit/3aad221919fd79bf7ee81e99419115f51b8457f9) (`3aad221919fd79bf7ee81e99419115f51b8457f9`), tagged [`project-1`](https://github.com/tscholzbrennan/career-platform/tree/project-1) |
 
 Everything below is in this repository. README links point to sections of [`README.md`](../README.md).
 
