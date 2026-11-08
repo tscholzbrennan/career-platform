@@ -270,6 +270,8 @@ Expected: no differences, 7 tables, 18 rows unless Task 0 changed content.
 - [ ] **Step 5: Merge (ask first).** After cutover works, merge `feat/aws-ec2-rds` into `main`, push, and point the server at `main` with `git checkout main`. Railway may redeploy, which is harmless since no traffic goes there. Run `deploy/deploy.sh` to prove the deploy path works.
 - [ ] **Step 6: End the freeze.** Content edits now go to RDS only, through the tunnel.
 
+**Result, 2026-11-08:** Steps 1 to 4 done. The apex record went DNS only, not proxied, to match the Let's Encrypt setup and the professor's DNS-only `aws` record. Cut over at 01:58:47 UTC; certificate expanded to `tristaninfo.me` at 01:59:28 UTC. Every live check passed (details in `migration-notes.md`). Step 5 (merge) waits on the user's pull request; Step 6 freeze ended at cutover.
+
 **Undo:** while the Railway trial is alive, restore the apex record from Task 0 (DNS only). After the trial ends there is no Railway to return to, by the user's decision, so fix forward. Worst case, rebuild from Tasks 3 to 7 and the latest dump.
 
 ---

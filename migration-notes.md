@@ -11,8 +11,8 @@ A running log of moving `tristaninfo.me` from Railway to AWS (EC2 + Single-AZ RD
 | RDS | `career-platform-db`, PostgreSQL 18.6, `db.t4g.micro`, Single-AZ, not public |
 | Security groups | `career-web` (`sg-066ac34b02d19f654`): 80 and 443 from anywhere, 22 from the laptop only. `career-db` (`sg-098df185872c1e670`): 5432 from `career-web` only |
 | Test address | `https://aws.tristaninfo.me` (DNS only), Let's Encrypt certificate, HTTP redirects to HTTPS |
-| Live site | Still Railway until cutover (Task 8) |
-| Branch | `feat/aws-ec2-rds`, pushed; `main` untouched |
+| Live site | `https://tristaninfo.me` on AWS since 2026-11-08 01:58:47 UTC (DNS only, `A` → `44.217.115.62`); Railway no longer receives traffic |
+| Branch | Merged to `main` via PR #2 (merge commit `ee09b83`, 2026-11-08 02:16 UTC); the server tracks `origin/main` and was redeployed from it |
 
 ## Deviations from the plan
 
@@ -49,4 +49,19 @@ A running log of moving `tristaninfo.me` from Railway to AWS (EC2 + Single-AZ RD
 | Resources | 398 of 909 MB RAM, swap unused, disk 51% |
 
 **Open finding:** `/privacy` now says requests "pass through Cloudflare first". That was written for the planned Cloudflare-proxied setup. `aws.tristaninfo.me` is DNS only, so it's not true there, and it's only true at cutover if `tristaninfo.me` is proxied. Fix the wording once the cutover design is decided.
+
+## Cutover (2026-11-08 UTC)
+
+| Step | Result |
+|---|---|
+| Content freeze check | Railway and RDS identical just before cutover: 7 tables, 18 rows |
+| Reboot test | Done earlier the same session: back in 22 s with no manual steps |
+| Deploy | `deploy/deploy.sh` deployed `3e0be10`; server nginx config matches the branch |
+| DNS | 01:58:47 UTC: apex changed from `CNAME aq2r9r5b.up.railway.app` to `A 44.217.115.62`, DNS only. 11 records before and after; nothing else changed (MX, SPF, DKIM, DMARC, `www`, `aws` identical). Cloudflare's authoritative server, 1.1.1.1, and 8.8.8.8 all answered the new IP within 10 s |
+| Certificate | 01:59:28 UTC: expanded to `aws.tristaninfo.me` + `tristaninfo.me` (staging dry run first). Possible certificate warning window on `https://tristaninfo.me`: about 40 s. Renewal dry run covers both names |
+| Live checks | `https://tristaninfo.me` 200 over HTTP/2 from `44.217.115.62`, valid certificate, `server: nginx`; all pages, CSS, and PDF 200; custom 404; `/api/profile` `source: database`; `/privacy` names AWS; HTTP and both `www` forms 301 to the root, `www` ends at 200 |
+| Errors | None in the app log since cutover |
+
+**Undo:** in Cloudflare, set the apex back to `CNAME tristaninfo.me → aq2r9r5b.up.railway.app`, DNS only. That works only while Railway still serves the site, so after the trial ends, fix forward instead.
+| 2026-11-08 | Server switches to `main` and runs `deploy.sh` | First checkout landed on the server's stale local `main` (`3007bba`, from the original clone), putting pre-migration code on disk with no `deploy.sh`. The running process was unaffected; about 1 minute later `git pull --ff-only` moved it to `ee09b83` and `deploy.sh` redeployed | `git checkout main` used the old local branch instead of `origin/main` | None served (the live site stayed on the new code), but a restart in that minute would have served old code. Next time: `git checkout -B main origin/main` |
 
