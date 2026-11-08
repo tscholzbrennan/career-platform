@@ -1,3 +1,5 @@
+from collections.abc import Mapping
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -10,13 +12,20 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-def resolve_database_url(raw: str, sqlite_path: str, on_railway: bool) -> str:
-    # Railway hands out postgres:// or postgresql:// URLs; SQLAlchemy needs the
-    # psycopg (v3) driver named explicitly. Unset means local SQLite, except on
-    # Railway, where the container disk is wiped on every deploy.
+def database_url_required(environ: Mapping[str, str]) -> bool:
+    # Production must never fall back to SQLite: the site would come up with
+    # placeholder content and look healthy. Read the process environment, not
+    # .env, so the guard holds even when .env is missing.
+    return environ.get("APP_ENV") == "production" or bool(environ.get("RAILWAY_ENVIRONMENT_NAME"))
+
+
+def resolve_database_url(raw: str, sqlite_path: str, require_url: bool) -> str:
+    # Hosts hand out postgres:// or postgresql:// URLs; SQLAlchemy needs the
+    # psycopg (v3) driver named explicitly. Unset means local SQLite, except in
+    # production.
     if not raw:
-        if on_railway:
-            raise RuntimeError("DATABASE_URL is not set; reference the Postgres service's DATABASE_URL")
+        if require_url:
+            raise RuntimeError("DATABASE_URL is not set; production must not fall back to SQLite")
         return f"sqlite:///{sqlite_path}"
     for prefix in ("postgres://", "postgresql://"):
         if raw.startswith(prefix):
