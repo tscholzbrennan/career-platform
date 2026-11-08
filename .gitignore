@@ -220,5 +220,20 @@ __marimo__/
 # Local worktree directories
 .worktrees/
 
-# Local SQLite database (production uses Railway Postgres)
+# Local SQLite database (production uses AWS RDS PostgreSQL)
 career_platform.db
+
+# macOS Finder metadata
+.DS_Store
+
+# Cloudflare CLI cache
+.cloudflare/
+
+# Impeccable design-tool working folders (other .impeccable files are tracked)
+.impeccable/critique/
+.impeccable/decision/
+.impeccable/questions/
+.impeccable/review/
+
+# Personal resume drafts (the published PDF is in static/resume/)
+Tristan resume*.docx
