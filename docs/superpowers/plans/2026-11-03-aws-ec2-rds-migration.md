@@ -13,7 +13,7 @@
 | App | FastAPI + Jinja + SQLAlchemy, Python 3.12. No outbound calls. One writer path, and it is not exposed over HTTP. `static/` and `templates/` are relative paths, so `WorkingDirectory` matters. |
 | Startup | `create_all`, `ensure_columns`, `seed_data` run at boot and need DDL rights. If the database is unreachable at boot, the process exits. |
 | Data | 7 tables, 18 rows (profiles 1, experiences 3, projects 1, skills 12, education 1, media 0, fallback_profile_snapshots 0). Verified dump from 2026-10-29 in `~/backups/career-platform/`. It is stale by cutover, so Task 6 takes a new one. |
-| AWS account | `907259821681`, **Free plan, $120 credits**. CLI profile `isba-4775` (IAM user `isba-student`, EC2 and RDS full access, no IAM, budgets, or pricing). `us-east-1` has only the default VPC `vpc-0e48ef02c6763e4e9` and its default security group. No instances, Elastic IPs, or RDS databases. |
+| AWS account | Free plan account (ID not published), **Free plan, $120 credits**. CLI profile `isba-4775` (IAM user `isba-student`, EC2 and RDS full access, no IAM, budgets, or pricing). `us-east-1` has only the default VPC `vpc-0e48ef02c6763e4e9` and its default security group. No instances, Elastic IPs, or RDS databases. |
 | Local tools | AWS CLI 2.39.3. Postgres 18 client at `/opt/homebrew/opt/postgresql@18/bin`. The `aws-mcp` server fails to connect, so this plan uses the CLI with an explicit profile. |
 
 **Goal:** `tristaninfo.me` is served from one EC2 instance reading a private Single-AZ RDS PostgreSQL 18.6 database, with Railway's current data, before the Railway trial ends.
