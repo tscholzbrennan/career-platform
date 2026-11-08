@@ -24,7 +24,7 @@
 <div class="r">
   <div class="c s3"><strong>Server logs</strong></div>
   <div class="c s9 prose">
-    <p>The site runs on Amazon Web Services (AWS), and requests pass through Cloudflare first. For every request, the server writes a log line with your IP address, the time, the page requested and whether it loaded. I use these logs to fix errors and keep the site running.</p>
+    <p>The site runs on Amazon Web Services (AWS). For every request, the server writes a log line with your IP address, the time, the page requested and whether it loaded. I use these logs to fix errors and keep the site running.</p>
   </div>
 </div>
 <div class="r">
@@ -71,7 +71,7 @@
 </div>
 <div class="r">
   <div class="c s3"><strong>Cloudflare</strong></div>
-  <div class="c s9 prose"><p>Receives each request first and passes it on to AWS. It handles your IP address and the page requested to do this.</p></div>
+  <div class="c s9 prose"><p>Runs the site’s DNS. If you go to www.tristaninfo.me, Cloudflare redirects you to tristaninfo.me, and handles your IP address and the page requested to do this.</p></div>
 </div>
 <div class="r">
   <div class="c s3"><strong>Me</strong></div>

@@ -33,6 +33,8 @@ def test_privacy_page_names_the_current_hosts():
     assert 'Amazon Web Services' in response.text
     assert 'Cloudflare' in response.text
     assert 'Railway' not in response.text
+    # The root domain is DNS only, so visitors connect straight to AWS.
+    assert 'pass through Cloudflare' not in response.text
 
 
 def test_footer_links_to_privacy_page():
