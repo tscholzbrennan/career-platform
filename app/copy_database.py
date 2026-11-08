@@ -22,8 +22,8 @@ def _count(conn, table) -> int:
 
 def copy_database(source_url: str, target_url: str, replace: bool = False) -> dict[str, int]:
     tables = Base.metadata.sorted_tables
-    source = create_engine(resolve_database_url(source_url, "", on_railway=False))
-    target = create_engine(resolve_database_url(target_url, "", on_railway=False))
+    source = create_engine(resolve_database_url(source_url, "", require_url=False))
+    target = create_engine(resolve_database_url(target_url, "", require_url=False))
     try:
         Base.metadata.create_all(target)
         ensure_columns(target)

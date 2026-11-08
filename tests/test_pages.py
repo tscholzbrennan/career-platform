@@ -27,6 +27,16 @@ def test_privacy_page_describes_analytics_and_choices():
     assert 'tools.google.com/dlpage/gaoptout' in response.text
 
 
+def test_privacy_page_names_the_current_hosts():
+    client = TestClient(app)
+    response = client.get('/privacy')
+    assert 'Amazon Web Services' in response.text
+    assert 'Cloudflare' in response.text
+    assert 'Railway' not in response.text
+    # The root domain is DNS only, so visitors connect straight to AWS.
+    assert 'pass through Cloudflare' not in response.text
+
+
 def test_footer_links_to_privacy_page():
     client = TestClient(app)
     response = client.get('/')

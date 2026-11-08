@@ -3,12 +3,12 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from app.config import resolve_database_url, settings
+from app.config import database_url_required, resolve_database_url, settings
 
 DATABASE_URL = resolve_database_url(
     settings.DATABASE_URL,
     settings.SQLITE_DB_PATH,
-    on_railway=bool(os.environ.get("RAILWAY_ENVIRONMENT_NAME")),
+    require_url=database_url_required(os.environ),
 )
 
 engine = create_engine(

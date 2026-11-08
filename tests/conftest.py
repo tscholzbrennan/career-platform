@@ -22,6 +22,7 @@ os.environ["DATABASE_URL"] = _test_database_url(os.environ, _TMP_DIR / "test.db"
 os.environ["SQLITE_DB_PATH"] = str(_TMP_DIR / "test.db")
 os.environ["FALLBACK_PROFILE_PATH"] = str(_TMP_DIR / "fallback-profile.json")
 os.environ.pop("RAILWAY_ENVIRONMENT_NAME", None)
+os.environ.pop("APP_ENV", None)
 
 import pytest  # noqa: E402
 

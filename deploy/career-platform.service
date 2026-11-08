@@ -1,0 +1,23 @@
+# Install: sudo cp deploy/career-platform.service /etc/systemd/system/
+#          sudo systemctl daemon-reload && sudo systemctl enable --now career-platform
+[Unit]
+Description=Career Platform (uvicorn)
+After=network-online.target
+Wants=network-online.target
+# Never give up: if RDS is unreachable at boot, keep retrying until it answers.
+StartLimitIntervalSec=0
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/career-platform
+# Set here, not in .env, so a missing .env can't drop the app back to SQLite.
+Environment=APP_ENV=production
+EnvironmentFile=/home/ubuntu/career-platform/.env
+# One process: more workers would race on the startup seed. Only nginx on this
+# machine may set forwarded headers.
+ExecStart=/home/ubuntu/career-platform/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
